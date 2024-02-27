@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Template Generator</title>
+</head>
+<body>
+    <h2>JSON Template Generator</h2>
+
+    <form id="jsonForm">
+        <label for="projectName">Project Name:</label>
+        <input type="text" id="projectName" name="projectName" required><br>
+
+        <label for="binaryName">Binary Name:</label>
+        <input type="text" id="binaryName" name="binaryName" required><br>
+
+        <label for="databaseAddress">Database Address:</label>
+        <input type="text" id="databaseAddress" name="databaseAddress" required><br>
+
+        <label for="databasePort">Database Port:</label>
+        <input type="number" id="databasePort" name="databasePort" required><br>
+
+        <label for="databaseUsername">Database Username:</label>
+        <input type="text" id="databaseUsername" name="databaseUsername" required><br>
+
+        <label for="databasePassword">Database Password:</label>
+        <input type="password" id="databasePassword" name="databasePassword" required><br>
+
+        <label for="databaseName">Database Name:</label>
+        <input type="text" id="databaseName" name="databaseName" required><br>
+
+        <label for="urlTextureProvider">Texture Provider URL:</label>
+        <input type="text" id="urlTextureProvider" name="urlTextureProvider" required><br>
+
+        <label for="launcherURL">Launcher URL:</label>
+        <input type="text" id="launcherURL" name="launcherURL" required><br>
+
+        <label for="downloadURL">Download URL:</label>
+        <input type="text" id="downloadURL" name="downloadURL" required><br>
+
+        <label for="launcherEXEURL">Launcher EXE URL:</label>
+        <input type="text" id="launcherEXEURL" name="launcherEXEURL" required><br>
+
+        <label for="nettyAddress">Netty Address:</label>
+        <input type="text" id="nettyAddress" name="nettyAddress" required><br>
+
+        <button type="button" onclick="generateJSON()">Generate JSON</button>
+    </form>
+
+    <hr>
+
+    <h3>Generated JSON:</h3>
+    <pre id="generatedJson"></pre>
+
+    <script>
+        function generateJSON() {
+            var projectName = document.getElementById('projectName').value;
+            var binaryName = document.getElementById('binaryName').value;
+            var databaseAddress = document.getElementById('databaseAddress').value;
+            var databasePort = document.getElementById('databasePort').value;
+            var databaseUsername = document.getElementById('databaseUsername').value;
+            var databasePassword = document.getElementById('databasePassword').value;
+            var databaseName = document.getElementById('databaseName').value;
+            var urlTextureProvider = document.getElementById('urlTextureProvider').value;
+            var launcherURL = document.getElementById('launcherURL').value;
+            var downloadURL = document.getElementById('downloadURL').value;
+            var launcherEXEURL = document.getElementById('launcherEXEURL').value;
+            var nettyAddress = document.getElementById('nettyAddress').value;
+
+            var jsonData = {
+                "projectName": projectName,
+                "mirrors": [
+                    "https://mirror.gravitlauncher.com/5.5.x/",
+                    "https://gravit-launcher-mirror.storage.googleapis.com/"
+                ],
+                "binaryName": binaryName,
+                "copyBinaries": true,
+                "cacheUpdates": true,
+                "env": "STD",
+                "auth": {
+                    "std": {
+                        "core": {
+                            "type": "mysql",
+                            "mySQLHolder": {
+                                "address": databaseAddress,
+                                "port": parseInt(databasePort),
+                                "username": databaseUsername,
+                                "password": databasePassword,
+                                "database": databaseName,
+                                "timezone": "UTC",
+                                "useHikari": true
+                            },
+                            "passwordVerifier": {
+                                "type": "bcrypt"
+                            },
+                            "expireSeconds": 3600,
+                            "table": "users",
+                            "tableHwid": "hwids",
+                            "uuidColumn": "uuid",
+                            "usernameColumn": "username",
+                            "passwordColumn": "password",
+                            "accessTokenColumn": "accessToken",
+                            "hardwareIdColumn": "hwidId",
+                            "serverIDColumn": "serverID",
+                            "permissionsTable": "user_permissions",
+                            "permissionsPermissionColumn": "name",
+                            "permissionsUUIDColumn": "uuid"
+                        },
+                        "textureProvider": {
+                            "url": urlTextureProvider,
+                            "type": "json"
+                        },
+                        "isDefault": true,
+                        "displayName": "Default"
+                    }
+                },
+                "protectHandler": {
+                    "profileWhitelist": {},
+                    "allowUpdates": [],
+                    "type": "advanced"
+                },
+                "components": {
+                    "regLimiter": {
+                        "message": "Превышен лимит регистраций",
+                        "excludeIps": [],
+                        "exclude": [],
+                        "rateLimit": 3,
+                        "rateLimitMillis": 36000000,
+                        "type": "regLimiter"
+                    },
+                    "authLimiter": {
+                        "message": "Превышен лимит авторизаций",
+                        "exclude": [],
+                        "rateLimit": 3,
+                        "rateLimitMillis": 8000,
+                        "type": "authLimiter"
+                    },
+                    "proguard": {
+                        "modeAfter": "MainBuild",
+                        "dir": "proguard",
+                        "enabled": true,
+                        "mappings": true,
+                        "type": "proguard"
+                    }
+                },
+                "launch4j": {
+                    "enabled": true,
+                    "setMaxVersion": false,
+                    "maxVersion": "99.0.0",
+                    "minVersion": "17.0.0",
+                    "downloadUrl": "https://bell-sw.com/pages/downloads/?version=java-8-lts&os=Windows&package=jre-full",
+                    "productName": "GravitLauncher",
+                    "productVer": "5.5.3.3",
+                    "fileDesc": "GravitLauncher 5.5.3",
+                    "fileVer": "5.5.3.3",
+                    "internalName": "Launcher",
+                    "copyright": "© GravitLauncher Team",
+                    "trademarks": "This product is licensed under GPLv3",
+                    "txtFileVersion": "%s, build %d",
+                    "txtProductVersion": "%s, build %d"
+                },
+                "netty": {
+                    "fileServerEnabled": true,
+                    "ipForwarding": false,
+                    "disableWebApiInterface": false,
+                    "showHiddenFiles": false,
+                    "sendProfileUpdatesEvent": true,
+                    "launcherURL": "https://$domain/{$binaryName}.jar",
+                    "downloadURL": "https://$domain/%dirname%/",
+                    "launcherEXEURL": "https://$domain/{$binaryName}.exe",
+                    "address": "wss://$domain/api",
+                    "bindings": {},
+                    "performance": {
+                        "usingEpoll": true,
+                        "bossThread": 2,
+                        "workerThread": 8,
+                        "schedulerThread": 2,
+                        "maxWebSocketRequestBytes": 1048576
+                    },
+                    "security": {
+                        "hardwareTokenExpire": 28800,
+                        "publicKeyTokenExpire": 28800,
+                        "launcherTokenExpire": 28800
+                    },
+                    "binds": [
+                        {
+                            "address": "0.0.0.0",
+                            "port": 9274
+                        }
+                    ],
+                    "logLevel": "DEBUG"
+                },
+                "launcher": {
+                    "compress": true,
+                    "stripLineNumbers": true,
+                    "deleteTempFiles": true,
+                    "certificatePinning": false,
+                    "encryptRuntime": false,
+                    "customJvmOptions": [],
+                    "memoryLimit": 256
+                },
+                "sign": {
+                    "enabled": false,
+                    "keyStore": "pathToKey",
+                    "keyStoreType": "JKS",
+                    "keyStorePass": "mypass",
+                    "keyAlias": "myname",
+                    "keyPass": "mypass",
+                    "metaInfKeyName": "SIGNUMO.RSA",
+                    "metaInfSfName": "SIGNUMO.SF",
+                    "signAlgo": "SHA256WITHRSA",
+                    "checkCertificateExpired": true
+                },
+                "startScript": "./start.sh"
+            };
+
+            var jsonString = JSON.stringify(jsonData, null, 2);
+            document.getElementById('generatedJson').innerText = jsonString;
+        }
+    </script>
+</body>
+</html>

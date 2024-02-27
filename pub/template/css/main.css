@@ -1,0 +1,21 @@
+@font-face {
+    font-family:Julius Sans One;
+    src: url(/template/assets/JuliusSansOne.ttf);
+}
+body {
+    color: #FFF;
+    font-family: "Julius Sans One";
+    /* font-size: 45px; */
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    background-image: url("/template/assets/background.jpg") ;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh; /* 100% of the viewport height */
+/*     !display: flex; */
+    align-items: center;
+    justify-content: center;
+}

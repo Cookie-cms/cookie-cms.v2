@@ -1,0 +1,65 @@
+basic:
+  registerTypes:
+    basic: true
+    discord: true
+    mail: true
+  registration: true
+  # if mail on, it will require account verification
+  requiredVerify: false
+  domain: "http://192.168.1.85/"
+  # version: company/club
+  version: club
+  blocklocalhost: false
+  accountperip : 1
+logs:
+  accounts:
+    token: "https://discord.com/api/webhooks/1209533104952447056/jgKS1cU8PsR24ac_6z9l_q7JiTSmhH3qXSKNG8VO1UPTn3Tml2QVTLx5SOfWbObRSHN5"
+    createacc: 0
+
+
+# maintenance section
+maintenance:
+  enabled: false
+  comment: ""
+  unixstemp: ""
+
+# database section
+database:
+  host: "127.0.0.1"
+  username: "admin"
+  pass: ""
+  db: "test"
+  port: "3306"
+
+# smtp section
+smtp:
+  host: ""
+  SMTPAuth: true
+  Username: ""
+  Password: ""
+  SMTPSecure: ""
+  Port: 587
+
+# debug section
+debug:
+  debug: false
+  development: false
+  generatorusername: false
+  outLogMasterFasterErrorOutPut: false
+
+# discord section
+discord:
+  enabled: false
+  client_id: ""
+  secret_id: ""
+  scopes: ""
+  redirect_url: ""
+  bot: ""
+  guild_id: 0
+  role: 0
+  webhooks: ""
+
+# antifake section
+antifake:
+  allowregister: false
+  webhookdiscord: ""

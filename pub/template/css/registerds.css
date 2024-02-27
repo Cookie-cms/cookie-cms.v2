@@ -1,0 +1,40 @@
+
+
+/* body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  background-image: var(--background-image);
+  transition: background-image 0.5s ease;
+} */
+
+.navbar {
+/* background-color: rgba(255,255,255,0.8);  */
+transition: transporent;
+}
+
+.navbar.light {
+background-color: rgba(0,0,0,0.8);
+}
+
+.navbar-brand {
+color: var(--text-color);
+}
+
+.navbar-nav .nav-link {
+color: var(--text-color);
+} 
+
+.navbar-toggler {
+filter: invert(100%) grayscale(100%) brightness(200%);
+}
+
+.navbar.dark .navbar-toggler {
+filter: invert(0%) grayscale(100%) brightness(200%); 
+}
+cat {
+border: 3px solid;
+width:27%;
+padding: 20px;
+
+backdrop-filter: blur(10px);
+}
