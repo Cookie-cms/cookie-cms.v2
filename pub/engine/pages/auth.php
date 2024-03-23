@@ -16,12 +16,12 @@ if (isset($_SESSION['user_data'])) {
 
 $variables = [
     'Projectname' => "$projectname",
-    'icon' => __TDS__ . 'assets/cookie.png',
-    'pageDescription' => 'Это пример использования TLP с передачей данных.',
-    'header' => "$headerContent",
-    'assets' => __TDS__ . 'assets/background.jpg',
-    'description' => 'Minecraft project with launcher x)',
+    'icon' => __TDS__ . "$icon",
+    'bootstrapcss' => "$bootstrapcss",
+    'bootstrapjs' => "$bootstrapjs",
+    'bootstrapicons' => "$bootstrapicons",
     'maincss' => __CSS__ . 'main.css',
+    'assets' => __TDS__ . 'assets/background.jpg',
     'authcss' => __CSS__ . 'auth.css',
     'avatarUrl' => "$avatarUrl",
     'loginform' => __CML__ . 'auth/login.php',
@@ -31,6 +31,5 @@ $variables = [
     'genusername' => 'false',
  
 ];
-
 
 ?>

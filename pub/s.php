@@ -1,31 +1,21 @@
 <?php
+session_start();
 
-// Your access token
-$accessToken = "1111-1121";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 
-// URL of your PHP page
-$phpPageUrl = "http://192.168.1.85/api/service/g";
+require __CM__ . "inc/mysql.php";
+require __CM__ . "inc/checkperms.php";
+$owner = $_SESSION['id'];
 
-// Initialize cURL session
-$ch = curl_init();
+    // Select the row where default is 1 and owner matches the session ID
+$stmt = $conn->prepare("SELECT username, uuid, `default`, owner FROM users_profiles WHERE `default` = 1 AND BINARY owner = :owner");
+$stmt->bindParam(':owner', $owner);
+$stmt->execute();
 
-// Set cURL options
-curl_setopt($ch, CURLOPT_URL, $phpPageUrl);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Authorization: Bearer $accessToken",
-));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+// Fetch the result
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+// var_dump($resultr);
+$uuid = $result['uuid'];
 
-// Execute cURL session
-$response = curl_exec($ch);
-
-// Check for cURL errors
-if (curl_errno($ch)) {
-    echo 'Curl error: ' . curl_error($ch);
-}
-
-// Close cURL session
-curl_close($ch);
-
-// Display the response from your PHP page
-echo $response;
+$permissions = getUserPermissionsByUUID($uuid, $conn);
+var_dump($permissions);

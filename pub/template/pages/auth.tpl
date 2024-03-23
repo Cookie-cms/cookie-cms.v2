@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{{ header }}
+    <title>{{ Projectname }} &#x2022 auth</title>
+    <link rel="icon" type="image/x-icon" href="{{ icon }}">
+    <link href="{{ bootstrapcss }}" rel="stylesheet">
+    <script src="{{bootstrapjs}}"></script>
+    <link rel="stylesheet" href="{{bootstrapicons}}">
+    <!-- <link rel="stylesheet" href="{{ maincss }}"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/template/css/style.css">
 </head>
@@ -16,7 +21,6 @@
     
     </style>
 <body>
-    <!-- {{ include 'inc/navbar.tpl' }} -->
     
 
     <div class="container cat" id="container">

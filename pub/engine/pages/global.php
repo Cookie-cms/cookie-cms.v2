@@ -13,7 +13,7 @@ $bootstrapcss = $yaml_data['bootstrapcss'];
 $bootstrapjs = $yaml_data['bootstrapjs'];
 $bootstrapicons = $yaml_data['bootstrapicons'];
 $jquery = $yaml_data['icon'];
-$t = $requestUri;
 $indexdescription = $yaml_data['indexdescription'];
+$navvbarpic = $yaml_data['navvbarpic'];
 
 ?>

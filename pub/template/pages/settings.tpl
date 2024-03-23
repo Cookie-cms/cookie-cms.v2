@@ -89,12 +89,16 @@
       
             <!-- Modal body -->
             <div class="modal-body">
-              Modal body..
+              <form action="" method="post">
+                <label for="username" class="form-label">username:</label>
+                <input class="form-control col-md-4" type="text"><br>
+                <button class="btn btn-primary profile-button " type="submit" name="update">create</button>
+              </form>
             </div>
       
             <!-- Modal footer -->
             <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button> -->
+              <button type="button" class="btn btn-success" data-bs-dismiss="modal">Close</button>
             </div>
       
           </div>

@@ -6,7 +6,7 @@ basic:
   registration: true
   # if mail on, it will require account verification
   requiredVerify: false
-  domain: "http://192.168.1.85/"
+  domain: "192.168.1.15"
   # version: company/club
   version: club
   blocklocalhost: false
@@ -19,16 +19,16 @@ logs:
 
 # maintenance section
 maintenance:
-  enabled: false
+  enabled: true
   comment: ""
   unixstemp: ""
 
 # database section
 database:
   host: "127.0.0.1"
-  username: "admin"
+  username: "root"
   pass: ""
-  db: "test"
+  db: "cmscookie"
   port: "3306"
 
 # smtp section

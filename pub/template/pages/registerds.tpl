@@ -7,17 +7,12 @@
 
 </head>
 <body>
-<!-- <div id="navbarContainer"></div> -->
 <link rel="stylesheet" href="{{ maincss }}">
-<!-- <link rel="stylesheet" href="css/main.css"> -->
 <link rel="stylesheet" href="{{ registerdscss }}">
 
 
 <div class="container ">
-<!-- <div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" id="toggleButton" checked>
-    <label class="form-check-label" for="toggleButton">Toggle Dark Mode</label>
-</div> -->
+
 </div>  
 <!-- <div class="col-md-4 border-right"> -->
             <!-- </div>  -->

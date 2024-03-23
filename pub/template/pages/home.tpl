@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html data-bs-theme="dark">
 <head>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-     <!-- <link href="css/home.css"> -->
-     <title><?php echo $titlepage ?> &#x2022 Home</title>
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-     <!-- <link rel="stylesheet" href="css/home.css"> -->
-     <link rel="stylesheet" href="{{ maincss }}">
+    <title>{{ Projectname }} &#x2022 Home</title>
+    <link rel="icon" type="image/x-icon" href="{{ icon }}">
+    <link href="{{ bootstrapcss }}" rel="stylesheet">
+    <script src="{{bootstrapjs}}"></script>
+    <link rel="stylesheet" href="{{bootstrapicons}}">
+    <link rel="stylesheet" href="{{ maincss }}">
 </head>
 <body>
     {{ include 'inc/navbar.tpl' }}
     
-<!-- <div id="navbarContainer"></div> -->
 <div class="container mt-3">
 <!-- <div class="form-check form-switch">
     <input class="form-check-input" type="checkbox" id="toggleButton" checked>
@@ -20,8 +19,6 @@
 </div>
 
 </div>
-
-  <!-- <span class="slider"></span> -->
 </label>
 
      <div class="container rounded  mt-5">
@@ -39,10 +36,6 @@
                                 <label for="username" class="form-label">Username:</label>
                                 <input type="text" class="form-control" placeholder="Username" value="" name="new_username" id="username">
                             </div>
-                            <!-- <div class="col-md-6">
-                                <label for="password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" placeholder="Password" value="" name="new_password" id="password">
-                            </div> -->
                         </div>
                         <div class="row mt-1">
                             <div class="col-md-6">
@@ -51,7 +44,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="cape" class="form-label" >Cape:</label>
-                                <input class="form-control col-md-6" type="file" id="cape" style="" disabled>
+                                <button class="btn btn-primary col-md-4" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload</button>
                             </div>
                         </div>
                         <div class="mt-3 text-right">
@@ -63,7 +56,32 @@
         </div>
     </div>
 </body>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-8 w-50">
+                <div class="row mt-1">
+                    <div class="col-md-6">
+                        {{ cape }}
 
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 <script src="{{ skinjs }}"></script>
 <!-- <script src="<?php echo __RD__ ?>js/darktheme.js"></script> -->
 
@@ -76,37 +94,18 @@ let skinViewer = new skinview3d.SkinViewer({
         skin: "img/skin.png"
     });
 
-    // Change viewer size
     skinViewer.width = 300;
     skinViewer.height = 600;
-
-    // Load another skins
-    skinViewer.loadSkin("/uploads/skins/368697c6-4d5f-2b1a-d1b2-cb97b1fa5428.png");
-
-    // Load a cape
-    skinViewer.loadCape("/api/skins/?type=cape&uuid={{ uuid }}");
-
-    // Change camera FOV
+    skinViewer.loadSkin("/uploads/skins/{{ uuid }}.png");
+    skinViewer.loadCape("/api/skinview/cape/{{ uuid }}/");
     skinViewer.fov = 70;
-
-    // Zoom out
     skinViewer.zoom = 0.5;
-
-    // Rotate the player
     skinViewer.autoRotate = false;
-
-    // Apply an animation
     skinViewer.animation = new skinview3d.IdleAnimation();
-
-    // Set the speed of the animation
     skinViewer.animation.speed = 0.5;
-
-    // Pause the animation
     skinViewer.animation.paused = false;
-
-    skinViewer.nameTag = "{{ Username }}";
-    // skinViewer.nameTag = "s";
-
+    
+    skinViewer.nameTag = "{{ username }}";
 
 //     // Get the radio button elements by their names
 //     const elytraRadioButton = document.querySelector('input[name="back_equipment"][value="elytra"]');
@@ -134,23 +133,7 @@ let skinViewer = new skinview3d.SkinViewer({
 //     }
 
 </script>
-  <script>
-fetch('inc/header.html')
-  .then(response => response.text())
-  .then(data => {
-    document.getElementById('navbarContainer').innerHTML = data;
-  })
-  .catch(error => {
-    console.error('Error fetching navbar content:', error);
-  });
-</script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- <div class="background-image"></div> -->
-<!-- <?php 
-// }else{
-    //  header("Location: index.php");
-    //  exit();
-    // echo "nope"; 
-// }
-//  ?>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+

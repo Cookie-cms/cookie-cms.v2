@@ -1,21 +1,24 @@
 <?php
 	error_reporting(E_ALL);
     ini_set('display_errors', true);// Функции с плащами пока вырезаны
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
+    require_once __CI__ . "yamlReader.php";
+
+    $file_path = __CM__ . 'configs/config.inc.yaml';
+    $yaml_data = read_yaml($file_path);
+    $domain = $yaml_data['basic']['domain'];
 
 require __CM__ . "inc/mysql.php";
 
-if (isset($_GET['type']) && $_GET['type'] == 'skin') {
-    $uuid = $_GET['uuid'];
+if (__URL__[2] == "skin") {
+    $uuid = __URL__[3];
 
     // SQL query with a parameter placeholder
-    $sql = 'SELECT c.`cloak`
-            FROM `users_profiles` u
-            LEFT JOIN `cape_users` uc
-            ON uc.`uid` = u.`id`
-            LEFT JOIN `cloaks` c
-            ON c.`id` = uc.`cid`
-            WHERE u.`uuid` = :uuid';
+    $sql = 'SELECT c.`cloak`, s.`slim`, s.`locked`
+        FROM `users_profiles` u
+        LEFT JOIN `cape_users` uc ON uc.`uid` = u.`id`
+        LEFT JOIN `cloaks` c ON c.`id` = uc.`cid`
+        LEFT JOIN `skins` s ON s.`uuid` = u.`uuid`
+        WHERE u.`uuid` = :uuid';
 
     // Prepare the SQL statement
     $stmt = $conn->prepare($sql);
@@ -28,62 +31,64 @@ if (isset($_GET['type']) && $_GET['type'] == 'skin') {
 
     // Fetch the result
     $cloakQueryResult = $stmt->fetch(PDO::FETCH_OBJ);
+    $locked = isset($cloakQueryResult->locked) ? $cloakQueryResult->locked : null;
+    $slim = isset($cloakQueryResult->slim) ? $cloakQueryResult->slim : null;
 
-    if ($cloakQueryResult !== false && isset($cloakQueryResult->cloak)) {
-        // Continue with the rest of your code
-        $cloakName = $cloakQueryResult->cloak;
-        $cloakPath = $_SERVER['DOCUMENT_ROOT'] . "/uploads/capes/{$cloakName}.png";
-        $sha256HashHexCloak = hash_file('sha256', $_SERVER['DOCUMENT_ROOT'] . "/uploads/capes/{$cloakName}.png");
-        $cloakUrl = "http://192.168.1.85/uploads/capes/{$cloakName}.png";
-        
-        
-        $responseData = array(
-            "SKIN" => array(
-                "url" => "http://192.168.1.85/uploads/skins/{$uuid}.png",
-                "digest" => hash_file('sha256', $_SERVER['DOCUMENT_ROOT'] . "/uploads/skins/{$uuid}.png"),
-                "metadata" => array(
-                    "model" => "false"
-                )
-            ),
-            "CAPE" => array(
-                "url" => $cloakUrl,
-                "digest" => $sha256HashHexCloak
-            )
-        );
+    $responseData = array();
 
-        // Set the content type to JSON
-        header('Content-Type: application/json');
+    $skinData = array();
 
-        // Encode the data as JSON and echo it
-        echo json_encode($responseData, JSON_PRETTY_PRINT);
-    } else {
-        // If no cloak is found, construct JSON response for SKIN only
-        $skinData = array(
-            "url" => "http://192.168.1.85/uploads/skins/{$uuid}.png",
-            "digest" => hash_file('sha256', $_SERVER['DOCUMENT_ROOT'] . "/uploads/skins/{$uuid}.png"),
-            "metadata" => array(
-                "model" => "false"
-            )
-        );
+	if (isset($slim) && $slim == "1") {
+		$skinData["metadata"] = array("model" => "slim");
+	}
 
-        // Set the content type to JSON
-        header('Content-Type: application/json');
+	if (isset($locked) && $locked == "1") {
+		$skinData["url"] = "http://$domain/uploads/skins/{$uuid}.png";
+		$skinData["digest"] = hash_file('sha256', $_SERVER['DOCUMENT_ROOT'] . "/uploads/skins/{$uuid}.png");
+	}
 
-        // Encode the data as JSON and echo it
-        // echo json_encode(array("SKIN" => $skinData), JSON_PRETTY_PRINT);
-    }
+	$capeData = array();
 
-}
+	// Add conditions for CAPE data
+	if ($cloakQueryResult !== false && isset($cloakQueryResult->cloak)) {
+		$cloakName = $cloakQueryResult->cloak;
+		$cloakPath = $_SERVER['DOCUMENT_ROOT'] . "/uploads/capes/{$cloakName}.png";
+		$sha256HashHexCloak = hash_file('sha256', $cloakPath);
+		$cloakUrl = "http://$domain/uploads/capes/{$cloakName}.png";
 
+		$capeData = array(
+			"url" => $cloakUrl,
+			"digest" => $sha256HashHexCloak
+		);
 
-if (isset($_GET['type']) && $_GET['type'] == 'extra') {
+		// Add metadata if $slim is set and equals "1"
+		if (isset($slim) && $slim == "1") {
+			$capeData["metadata"] = array("model" => "slim");
+		}
+	}
+
+	// Combine SKIN and CAPE data into the response
+	$responseData = array(
+		"SKIN" => $skinData,
+		"CAPE" => !empty($capeData) ? $capeData : []
+	);
+
+	// Set the content type to JSON
+	header('Content-Type: application/json');
+
+	// Encode the data as JSON and echo it
+	echo json_encode($responseData, JSON_PRETTY_PRINT);
+
+	}
+
+if (__URL__[2] == "extra") {
     // Include the file with corrected parameters
-    $uuid = $_GET['uuid'];
+    $uuid = __URL__[3];
     $size = $_GET['size'];
     $mode = $_GET['mode'];
     $skin = [
 		'dir_skins' => __RDS__ .'/uploads/skins/', // Путь до папки скинов от текущего каталога
-		'dir_cloaks' => '/api?module=skin&type=cape&uuid=', // Путь до папки плащей от текущего каталога
+		'dir_cloaks' => '/uploads/capes/', // Путь до папки плащей от текущего каталога
 		'default' => 'default', // Дефолтный скин
         'user' => $uuid,
         'size' => $size,
@@ -190,19 +195,16 @@ if (isset($_GET['type']) && $_GET['type'] == 'extra') {
 }
 
 
-if (isset($_GET['type']) && $_GET['type'] == 'cape') {
+if (__URL__[2] == "cape") {
         // Assuming you have already defined $conn (PDO connection) and $uuid
-        $uuid = $_GET['uuid'];
+	$uuid = __URL__[3];
 
     // SQL query with a parameter placeholder
-    $sql = 'SELECT c.`cloak`
-            FROM `users_profiles` u
-            LEFT JOIN `cape_users` uc
-            ON uc.`uid` = u.`id`
-            LEFT JOIN `cloaks` c
-            ON c.`id` = uc.`cid`
-            WHERE u.`uuid` = :uuid';
-
+	$sql = 'SELECT c.`cloak`
+		FROM `skins` s
+		LEFT JOIN `cloaks` c
+		ON c.`id` = s.`cape`
+		WHERE s.`uuid` = :uuid';
     // Prepare the SQL statement
     $stmt = $conn->prepare($sql);
 
@@ -231,3 +233,42 @@ if (isset($_GET['type']) && $_GET['type'] == 'cape') {
         // Encode the data as JSON and echo it
         // echo json_encode($responseData, JSON_PRETTY_PRINT);
     }
+
+
+if (__URL__[2] == "cloakview") {
+	$CLOAK = __RDS__.'/uploads/capes/'.__URL__[3].'.png';
+	$skin['mode'] = __URL__[4];
+	$skin['size'] = __URL__[5];
+
+	$skin['skif'] = getimagesize($CLOAK);
+	$skin['h'] = $skin['skif']['0'];
+	$skin['w'] = $skin['skif']['1'];
+	$skin['r'] = $skin['h']/64;
+	header ("Content-type: image/png");
+	$skin['c'] = imagecreatefrompng($CLOAK);
+	$skin['p'] = imagecreatetruecolor(10*$skin['r'], 16*$skin['r']);
+	$skin['t'] = imagecolorallocatealpha($skin['p'], 255, 255, 255, 127);
+	imagefill($skin['p'], 0, 0, $skin['t']);
+	if ($skin['mode'] == '1') {
+		imagecopy($skin['p'], $skin['c'], 0, 0, 12*$skin['r'], 1*$skin['r'], 10*$skin['r'], 16*$skin['r']);
+	} elseif ($skin['mode'] == '2') {
+		imagecopy($skin['p'], $skin['c'], 0, 0, 1*$skin['r'], 1*$skin['r'], 10*$skin['r'], 16*$skin['r']);
+	}
+	$skin['fs'] = imagecreatetruecolor($skin['size'], (int)($skin['size']*1.6));
+	imagesavealpha($skin['fs'], true);
+	$skin['t'] = imagecolorallocatealpha($skin['fs'], 255, 255, 255, 127);
+	imagefill($skin['fs'], 0, 0, $skin['t']);
+	imagecopyresized($skin['fs'], $skin['p'], 0, 0, 0, 0, imagesx($skin['fs']), imagesy($skin['fs']), imagesx($skin['p']), imagesy($skin['p']));
+	imagepng($skin['fs']);
+	imagedestroy($skin['fs']);
+	imagedestroy($skin['p']);
+	imagedestroy($skin['c']);
+
+    exit();
+}
+
+if (__URL__[2] == "") {
+	header('Content-Type: application/json');
+	$response = json_encode(['error' => 'No modules found for this request']);
+	echo $response;
+}

@@ -39,9 +39,6 @@ class TemplateEngine {
                 $includeFile = constant($includeFile);
             }
 
-            // echo "Including file: $includeFile<br>";
-
-            // Construct an absolute path using __TD__
             $includeFile = rtrim($_SERVER['DOCUMENT_ROOT'] . '/template' , '/') . '/' . $includeFile;
 
             if (file_exists($includeFile)) {
@@ -52,7 +49,6 @@ class TemplateEngine {
             }
         }, $content);
 
-        // Replace {{ if ... }} and {{ else }} with PHP control structures
         $content = preg_replace_callback('/{{\s*if\s*(.*?)\s*}}(.*?)(?:{{\s*else\s*}}(.*?))?{{\s*endif\s*}}/s', function($matches) {
             $condition = $matches[1];
             $ifContent = $matches[2];

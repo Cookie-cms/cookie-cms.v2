@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', true);
 session_start(); 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
-
+ini_set('session.cookie_lifetime', 86400);
 require __CM__ . "inc/mysql.php";
 
 

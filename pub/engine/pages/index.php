@@ -9,7 +9,7 @@ $avatarUrl = "";
 
 
 $a = $_SERVER['REMOTE_ADDR'];
-// $logged = true;
+
 $loggeds = "";
 $avatarUrlDS = "";
 if (isset($_SESSION['uuid'])) {
@@ -22,7 +22,6 @@ if (isset($_SESSION['user_data'])) {
     $loggeds = "true";
     $userData = $_SESSION['user_data'];
     $avatarUrlDS = "https://cdn.discordapp.com/avatars/{$userData['id']}/{$userData['avatar']}.png";
-    // echo($avatarUrl);
 }
 $variables = [
     'Projectname' => "$projectname",

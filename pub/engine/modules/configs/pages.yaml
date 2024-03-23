@@ -1,0 +1,23 @@
+home:
+  uri: home
+  maintenance: false
+  template: home
+  variablesPath : home
+admin:
+  uri: admin
+  maintenance: true
+  template: admin
+  variablesPath : admin
+  suffix: 
+    enabled: true
+    template: admin/uri
+default:
+  uri: default
+  maintenance: true
+  template: default
+  variablesPath : default
+index:
+  uri: index
+  maintenance: true
+  template: index
+  variablesPath : index

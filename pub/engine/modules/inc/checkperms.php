@@ -1,40 +1,88 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
+require __CM__ . "inc/mysql.php";
 
-function getGroupPermissions($userID, $conn) {
-    try {
-        // Query to get user's group ID
-        $userGroupQuery = "SELECT u.perms
-                           FROM users u
-                           WHERE u.id = :userID";
+function getUserPermissions($userId, $accountId = 0, $conn) {
+    // Получить разрешения, назначенные напрямую учетной записи пользователя
+    // и разрешения, которые применяются ко всем учетным записям пользователя
+    $query = "SELECT perm
+              FROM users_perms
+              WHERE iduser = :userId AND (account = :accountId OR account = 0)";
 
-        $stmtUserGroup = $conn->prepare($userGroupQuery);
-        $stmtUserGroup->bindParam(':userID', $userID, PDO::PARAM_STR);
-        $stmtUserGroup->execute();
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+    $stmt->bindParam(':accountId', $accountId, PDO::PARAM_INT);
+    $stmt->execute();
 
-        if ($stmtUserGroup->rowCount() > 0) {
-            // Fetch the user's group ID
-            $userGroupID = $stmtUserGroup->fetch(PDO::FETCH_ASSOC)['perms'];
+    $accountPermissions = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-            // Query to get all permissions for the group
-            $groupPermissionsQuery = "SELECT perm FROM groups_perms WHERE idgroup = :userGroupID";
+    // Получить разрешения, назначенные группам, к которым принадлежит пользователь
+    $query = "SELECT gp.permission
+              FROM group_perms gp
+              JOIN user_group ug ON gp.idgroup = ug.group_id
+              WHERE ug.user_id = :userId";
 
-            $stmtGroupPermissions = $conn->prepare($groupPermissionsQuery);
-            $stmtGroupPermissions->bindParam(':userGroupID', $userGroupID, PDO::PARAM_INT);
-            $stmtGroupPermissions->execute();
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+    $stmt->execute();
 
-            if ($stmtGroupPermissions->rowCount() > 0) {
-                // Fetch the group's permissions
-                $groupPermissions = $stmtGroupPermissions->fetchAll(PDO::FETCH_COLUMN);
+    $groupPermissions = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-                return $groupPermissions;
-            } else {
-                return []; // Group permissions not found
-            }
-        } else {
-            return false; // User not found
-        }
-    } catch (PDOException $e) {
-        die("Error: " . $e->getMessage());
-    }
+    // Объединить разрешения учетной записи и группы
+    $permissions = array_merge($accountPermissions, $groupPermissions);
+
+    return $permissions;
 }
-?> 
+
+function getUserPermissionsByUUID($uuid, $conn) {
+    // Получить id пользователя и id учетной записи по UUID профиля
+    $query = "SELECT owner, id
+              FROM users_profiles
+              WHERE uuid = :uuid";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':uuid', $uuid, PDO::PARAM_STR);
+    $stmt->execute();
+
+    $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($profile === false) {
+        // Профиль не найден
+        return false;
+    }
+
+    $userId = $profile['owner'];
+    $accountId = $profile['id'];
+
+    // Получить разрешения, назначенные напрямую учетной записи пользователя
+    // и разрешения, которые применяются ко всем учетным записям пользователя
+    $query = "SELECT perm
+              FROM users_perms
+              WHERE iduser = :userId AND (account = :accountId OR account = 0)";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+    $stmt->bindParam(':accountId', $accountId, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $accountPermissions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    // Получить разрешения, назначенные группам, к которым принадлежит пользователь
+    $query = "SELECT gp.permission
+              FROM group_perms gp
+              JOIN user_group ug ON gp.idgroup = ug.group_id
+              WHERE ug.user_id = :userId";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+    $stmt->execute();
+
+    $groupPermissions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    // Объединить разрешения учетной записи и группы
+    $permissions = array_merge($accountPermissions, $groupPermissions);
+
+    return $permissions;
+}

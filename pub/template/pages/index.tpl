@@ -23,7 +23,7 @@
     <div class=".fs-2s text-center position-absolute top-50 start-50 translate-middle">
 
         <h2 class="">{{ Projectname }}</h2>
-        <h4 class="a">{{ description }}</h4>
+        <h4 class="a">{{ description }}</h4>&#8734
         <!-- <button type="button" class="btn btn-outline-success lg" data-bs-toggle="modal" data-bs-target="#myModal">
           Start play
         </button> -->
@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+    <!-- <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button> -->
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3" data-bs-autohide="false">
   <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">

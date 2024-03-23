@@ -1,0 +1,6 @@
+discord: 
+  uri: discord
+  dir: oauth2
+skin: 
+  uri: skin
+  dir: skinview

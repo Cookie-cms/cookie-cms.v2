@@ -12,48 +12,8 @@ $file_path = __CM__ . 'configs/config.inc.yaml';
 $yaml_data = read_yaml($file_path);
 
 
-// ss
 require __CM__ . "inc/mysql.php";
-// function isPrivateIP($ip) {
-//     // Convert IP address to long integer
-//     $ipLong = ip2long($ip);
 
-//     // Check if the IP is in the private range 192.168.0.0/12
-//     $privateStart = ip2long('192.168.0.0');
-//     $privateEnd = ip2long('192.168.255.255');
-
-//     if ($ipLong >= $privateStart && $ipLong <= $privateEnd) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
-
-// $ip = $_SERVER['REMOTE_ADDR'];
-
-// if (isPrivateIP($ip)) {
-//     die('Private IP address detected');
-// }
-
-// // Rest of your code...
-// $url = "http://ip-api.com/json/$ip";
-// $jsonData = file_get_contents($url);
-
-// if ($jsonData === false) {
-//     // Handle error, e.g., connection issue
-//     die('Error fetching data from the URL');
-// }
-
-// Decode the JSON data
-// $data = json_decode($jsonData, true);
-
-// if ($data === null) {
-//     // Handle JSON decoding error
-//     die('Error decoding JSON data');
-// }
-
-// // Now you can work with the $data array
-// print_r($data);
 
 function validate($data){
     $data = trim($data);
