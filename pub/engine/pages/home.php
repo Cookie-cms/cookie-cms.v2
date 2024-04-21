@@ -7,17 +7,14 @@ require __CM__ . "inc/mysql.php";
 
 require __CM__ . "home/main.php";
 
-$loggeds = "";
-$avatarUrlDS = "";
+require __CM__ . "inc/checkperms.php";
 
-// $a = $_SESSION['uuid'];
-
-if (isset($_SESSION['uuid'])) {
+// if (isset($_SESSION['uuid'])) {
     
-    $f = $_SESSION['uuid'];
-    $avatarUrl = "http://192.168.1.85/api?module=skin&type=extra&uuid=$f&size=100&mode=3";
+//     $f = $_SESSION['uuid'];
+//     $avatarUrl = "http://192.168.1.85/api?module=skin&type=extra&uuid=$f&size=100&mode=3";
 
-}
+// }
 if (isset($_SESSION['user_data'])) {
     $loggeds = "true";
     $userData = $_SESSION['user_data'];
@@ -29,40 +26,43 @@ if (isset(__URL__[1])) {
     $owner = $_SESSION['id'];
     echo($uuid);
     // Select the row where owner matches and username is equal to the provided user
-    // $stmt = $conn->prepare("SELECT username, uuid, `default`, owner FROM users_profiles WHERE BINARY owner = :owner AND BINARY uuid = :uuid");
-    // $stmt->bindParam(':owner', $owner);
-    // $stmt->bindParam(':uuid', $uuid);
-    // $stmt->execute();
+    $stmt = $conn->prepare("SELECT username, uuid, `default`, owner FROM users_profiles WHERE BINARY owner = :owner AND BINARY uuid = :uuid");
+    $stmt->bindParam(':owner', $owner);
+    $stmt->bindParam(':uuid', $uuid);
+    $stmt->execute();
 
-    // // Fetch the result
-    // $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    // // var_dump($result);
-    // if (!$result) {
+    // Fetch the result
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    // var_dump($result);
+    if (!$result) {
 
-    //     // The user provided in 'user' doesn't match the owner in the database
-    //     // Redirect the user to another page
-    //     header("Location: /home");
-    //     exit();
-    // }
-    // $a = $result['uuid']; 
+        // The user provided in 'user' doesn't match the owner in the database
+        // Redirect the user to another page
+        header("Location: /home");
+        exit();
+    }
+    $a = $result['uuid']; 
 
-    // $playername = getUsernameByUUID($conn, $a);     
+    $playername = getUsernameByUUID($conn, $a);     
 } else {
     $owner = $_SESSION['id'];
-
+    // echo($owner);
     // Select the row where default is 1 and owner matches the session ID
-    $stmt = $conn->prepare("SELECT username, uuid, `default`, owner, id FROM users_profiles WHERE `default` = 1 AND BINARY owner = :owner");
+    $stmt = $conn->prepare("SELECT id, username, uuid, `default`, owner, id FROM users_profiles WHERE `default` = 1 AND BINARY owner = :owner");
     $stmt->bindParam(':owner', $owner);
     $stmt->execute();
 
     // Fetch the result
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     // var_dump($resultr);
-    $a = $result['uuid'];
-    $playername = getUsernameByUUID($conn, $a);   
+    $uuid = $result['uuid'];
+    $profileId = $result['id'];
+    $playername = getUsernameByUUID($conn, $uuid);
+    // echo($a);
+    // echo($playername);
 }
-// echo($_SESSION['id']);
 
+$playername = getUsernameByUUID($conn, $uuid);
 
 
 if (!isset($_SESSION['id'])) {
@@ -83,30 +83,57 @@ $variables = [
     'avatarUrlds' => "$avatarUrlDS",
     // 'avatarUrl' => "$avatarUrl",
     'skinjs' => __TDS__ . "js/skinview3d.bundle.js",
-    'uuid' => "$a",
+    'uuid' => "$uuid",
     'username' => "$playername",
     // 'logged' => "$logged",
     
 ];
 
-// $id = $result['id'];
-// $stmt = $conn->prepare("SELECT * FROM cloaks WHERE uid = :id");
-// $stmt->bindParam(':id', $id);
-// $stmt->execute();
-// $cloaks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+if (isset($_GET['update'])) {
+    $playername = getUsernameByUUID($conn, $uuid);
+    $variables['username'] = $playername;
+} 
 
-// $stmt = $conn->prepare('SELECT * FROM `cape_users` WHERE `uid` = :uid');
-// $stmt->bindValue(':uid', $id);
-
-// $stmt->execute();
-// $cloak = $stmt->fetch(PDO::FETCH_ASSOC);
-// // var_dump($cloak);
-// ob_start(); // Start output buffering
+$permissions = GetProfilePermissions($profileId, $conn);
+// var_dump($permissions); 
 
 
+foreach ($permissions as $permission) {
+    $parts = explode('.', $permission);
 
-// $listContent = ob_get_clean(); // Get the content and clear the buffer
+    if (count($parts) < 4) {
+        // The permission string does not have four parts
+        // Handle this case as needed
+        continue;
+    }
 
-// // Add $listContent to the $variables array
-// $variables = isset($variables) && is_array($variables) ? $variables : [];
-// $variables['cape'] = $listContent;
+    $namePart = $parts[2]; // Get the name part
+    $intPart = $parts[3]; // Get the int part
+
+    if ($parts[0] == "profile" && $parts[1] == "cape" && ($namePart == "*" || $intPart == "*" || $intPart == $profileId)) {
+        // The permission string follows the format "profile.cape.{name/*}.{int/*}"
+        if ($namePart == "*") {
+            // If name is "*", fetch all capes
+            $stmt = $conn->prepare("SELECT * FROM cloaks");
+        } else {
+            // If name is not "*", fetch capes with the specific name
+            $stmt = $conn->prepare("SELECT * FROM cloaks");
+            $stmt->bindParam(':name', $namePart);
+        }
+        $stmt->execute();
+        $capes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}}
+
+
+
+ob_start(); // Start output buffering 
+?>
+<?php foreach ($capes as $cape): ?>
+        <img src="api/skin/cloakview/<?php echo $cape['cloak']; ?>/2/128">
+        <input type="hidden" name="uuid" id="uuid" value="<?php echo $uuid?>">
+        <button type="submit" class="btn btn-primary" name="setcloak" value="<?php echo $cape['id']; ?>">set</button>
+<?php endforeach; ?>
+<?php
+$cape = ob_get_clean(); // Get the content and clear the buffer
+$variables['cape'] = $cape;
+// Remove the closing PHP tag

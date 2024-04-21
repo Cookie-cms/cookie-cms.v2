@@ -1,0 +1,16 @@
+.snowflake {
+    position: fixed;
+    background: #FFF;
+    border-radius: 50%;
+    animation-name: fall;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    box-shadow: 0 0 10px 1px ;
+
+  }
+  
+  @keyframes fall {
+    from { top: -5%; }
+    to { top: 100%; }
+  }

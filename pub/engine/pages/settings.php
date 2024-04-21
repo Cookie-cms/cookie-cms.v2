@@ -5,6 +5,14 @@ require __CM__ . "inc/mysql.php";
 require __CM__ . "inc/checkperms.php";
 
 $owner= $_SESSION['id'];
+
+$stmt = $conn->prepare("SELECT mail, dsid FROM users WHERE BINARY id = :owner");
+$stmt->bindParam(':owner', $owner); // Replace $owner with the actual value you want to match
+$stmt->execute();
+
+$ownerinfo = $stmt->fetch(PDO::FETCH_ASSOC);
+$ownermail = $ownerinfo['mail'] ?? "Not found";
+$ownerds = $ownerinfo['dsid'];
 $stmt = $conn->prepare("SELECT username, uuid FROM users_profiles WHERE BINARY owner = :owner");
 $stmt->bindParam(':owner', $owner); // Replace $owner with the actual value you want to match
 $stmt->execute();
@@ -15,19 +23,28 @@ if (!isset($_SESSION['id'])) {
      exit();
 }
 // var_dump($users);
+if(isset($_COOKIE["show"])) {
+    $cookieValue = $_COOKIE["show"];
+    unset($_COOKIE['show']);
+    setcookie('show', null, -1, '/');
+    echo $cookieValue;
+}
 
 $variables = [
     'Projectname' => "$projectname",
-    'icon' => __TDS__ . 'assets/cookie.png',
-    'pageDescription' => 'Это пример использования TLP с передачей данных.',
-    'bootstrapCssPath' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css',
+    'icon' => __TDS__ . "$icon",
+    'bootstrapcss' => "$bootstrapcss",
+    'bootstrapjs' => "$bootstrapjs",
+    'bootstrapicons' => "$bootstrapicons",
+    'jquery' => "$jquery",
     'jqueryPath' => 'https://code.jquery.com/jquery-3.5.1.slim.min.js',
-    'popperPath' => 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js',
-    'bootstrapJsPath' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js',
     'buttonplay' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js',
     'assets' => __TDS__ . 'assets/background.jpg',
-    'description' => 'Minecraft project with launcher x)',
+    'description' => "$indexdescription",
     'maincss' => __CSS__ . 'main.css',
+    'mail' => "$ownermail",
+    'dsid' => "$ownerds",
+
 ];
 // $userId = $_SESSION['id'];
 // $permissions = getUserPermissions($userId, $accountId = 0, $conn);
@@ -37,7 +54,7 @@ ob_start(); // Start output buffering
 
 foreach ($users as $item): ?>
         <a href="/home?user=<?= $item['uuid'] ?>" class="list-group-item list-group-item-action">
-            <img class="rounded" src="http://cookiecms.local/api/skinview/extra/<?= $item['uuid'] ?>/?mode=3&size=50" alt="<?= $item['username'] ?>">
+            <img class="rounded" src="http://cookiecms.local/api/skin/extra/<?= $item['uuid'] ?>/?mode=3&size=50" alt="<?= $item['username'] ?>">
             <?= $item['username'] ?>
         </a>
 

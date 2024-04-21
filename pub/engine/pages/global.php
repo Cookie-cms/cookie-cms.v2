@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', true);
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 // $yamlFilePath = __CM__ . 'configs/config.inc.yml';
 require_once __CI__ . "yamlReader.php";
@@ -15,5 +17,8 @@ $bootstrapicons = $yaml_data['bootstrapicons'];
 $jquery = $yaml_data['icon'];
 $indexdescription = $yaml_data['indexdescription'];
 $navvbarpic = $yaml_data['navvbarpic'];
+$snow = $yaml_data['snow'];
+
+
 
 ?>

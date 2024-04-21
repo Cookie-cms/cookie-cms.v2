@@ -22,13 +22,3 @@ require_once __CI__ . "TemplateEngine.php";
 // require_once __CI__ . "yamlReader.php";
 require_once __CI__ . "mail.php";
 include  __CD__ . "pages/global.php";
-
-// $file_path = __CM__ . 'configs/config.inc.yaml';
-// Example usage:
-// $file_path = '/var/www/cms/pub/engine/modules/configs/config.inc.yaml';
-
-// try {
-
-// } catch (Exception $e) {
-//     echo "Error: " . $e->getMessage();
-// }

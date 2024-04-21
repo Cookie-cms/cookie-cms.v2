@@ -2,8 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', true);
 require_once __DEF__;
-
 $avatarUrl = "";
+require __CD__ . 'pages/global.php';
 
 
 
@@ -39,6 +39,9 @@ $variables = [
     'avatarUrl' => "$avatarUrl",
     't' => "$requestUri",
     'logged' => "$loggeds",
+    'snow' => $snow,
 ];
+// $snow = "true";
+// $variables['snow'] = $snow;
 
 ?>

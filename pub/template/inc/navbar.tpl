@@ -1,4 +1,5 @@
-        <nav class="navbar navbar-expand-lg">
+
+<nav class="navbar navbar-expand-lg">
         
             <div class="container px-5">
                 <a class="navbar-brand" href="/">&nbsp;{{ Projectname }}</a>
@@ -6,14 +7,18 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
-                
             </li>
-            {{ if loggedds }}
+            {{ if snow }}
+                <script src="http://cookiecms.local/template/js/snow.js"></script>
+                <link rel="stylesheet" href="http://cookiecms.local/template/css/snow.css">
+            {{ endif }}
+
+            <!-- {{ if loggedds }}
                 {{ if avatarUrlds }}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="https://cdn.discordapp.com/avatars/741957448532754493/3905f10efdf7de4b3c76fed401c56270.webp?size=80" width="32" height="32" class="rounded-circle">
-                        <!-- User -->
+                        <!-- User 
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Action</a></li>
@@ -26,7 +31,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
                         <img src="https://cdn.discordapp.com/avatars/741957448532754493/3905f10efdf7de4b3c76fed401c56270.webp?size=80" width="32" height="32" class="rounded-circle">
-                        <!-- User -->
+                        <!-- User 
 
                     </a>
                     <ul class="dropdown-menu">
@@ -37,10 +42,10 @@
                         
                     </ul>
                 </li>
-                {{ endif }}
+                {{ endif }} -->
                 
-            {{ else }}
-            {{ endif }}
+            <!-- {{ else }} -->
+            <!-- {{ endif }} -->
 
 
 

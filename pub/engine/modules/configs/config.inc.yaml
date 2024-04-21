@@ -6,20 +6,22 @@ basic:
   registration: true
   # if mail on, it will require account verification
   requiredVerify: false
-  domain: "192.168.1.15"
+  domain: "cookiecms.local"
   # version: company/club
   version: club
   blocklocalhost: false
   accountperip : 1
+  skindefault: 
+    skin: ""
+    slim: false 
 logs:
   accounts:
     token: "https://discord.com/api/webhooks/1209533104952447056/jgKS1cU8PsR24ac_6z9l_q7JiTSmhH3qXSKNG8VO1UPTn3Tml2QVTLx5SOfWbObRSHN5"
     createacc: 0
 
-
 # maintenance section
 maintenance:
-  enabled: true
+  enabled: false
   comment: ""
   unixstemp: ""
 

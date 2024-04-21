@@ -83,7 +83,8 @@ class TemplateEngine {
         } elseif (isset($this->headerData[$variable])) {
             return $this->headerData[$variable];
         }
-        return '';
+        return $variable;
     }
+    
 }
 ?>

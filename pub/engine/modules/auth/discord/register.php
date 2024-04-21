@@ -63,8 +63,8 @@ try {
     }
 
     $hashed_password = password_hash($pass, PASSWORD_BCRYPT);
-    $length = 3;
-    $id = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length) . '-' . substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
+    $length = 16;
+    $id = mt_rand(100000000000000000, 999999999999999999);
 
     // Insert user into the database
     $stmt = $conn->prepare("INSERT INTO users (id, password, dsid, mail, ip) VALUES (:id, :pass, :dsid, :mail, :ip)");

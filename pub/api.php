@@ -23,6 +23,6 @@ if (isset($yaml_data[$requestedModule])) {
     }
 } else {
     http_response_code(404);
-    die($errorContent);
+    die("Module not found");
 }
 ?>

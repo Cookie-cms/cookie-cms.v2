@@ -55,5 +55,9 @@ if (isset($_GET['code'])) {
     $_SESSION['user_data'] = $user_data;
     // var_dump($user_data);
     header('Location: /engine/modules/auth/discord/login.php');
-};
+}else{
+    header('Content-Type: application/json');
+	$response = json_encode(['error' => 'No modules found for this request']);
+	echo $response;
+}
 ?>

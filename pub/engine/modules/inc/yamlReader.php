@@ -13,11 +13,11 @@ function read_yaml($file_path) {
 
     $data = yaml_parse($yaml_content);
 
-    if ($data === false) {
+    if ($data === false && $yaml_content !== '') {
         throw new Exception("Error parsing YAML in file: $file_path");
     }
 
-    return $data;
+    return $data ?? [];
 }
 
 ?>

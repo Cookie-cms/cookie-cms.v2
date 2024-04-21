@@ -9,77 +9,7 @@
 
 require __CM__ . "inc/mysql.php";
 
-if (__URL__[2] == "skin") {
-    $uuid = __URL__[3];
 
-    // SQL query with a parameter placeholder
-    $sql = 'SELECT c.`cloak`, s.`slim`, s.`locked`
-        FROM `users_profiles` u
-        LEFT JOIN `cape_users` uc ON uc.`uid` = u.`id`
-        LEFT JOIN `cloaks` c ON c.`id` = uc.`cid`
-        LEFT JOIN `skins` s ON s.`uuid` = u.`uuid`
-        WHERE u.`uuid` = :uuid';
-
-    // Prepare the SQL statement
-    $stmt = $conn->prepare($sql);
-
-    // Bind the parameter
-    $stmt->bindParam(':uuid', $uuid, PDO::PARAM_STR);
-
-    // Execute the statement
-    $stmt->execute();
-
-    // Fetch the result
-    $cloakQueryResult = $stmt->fetch(PDO::FETCH_OBJ);
-    $locked = isset($cloakQueryResult->locked) ? $cloakQueryResult->locked : null;
-    $slim = isset($cloakQueryResult->slim) ? $cloakQueryResult->slim : null;
-
-    $responseData = array();
-
-    $skinData = array();
-
-	if (isset($slim) && $slim == "1") {
-		$skinData["metadata"] = array("model" => "slim");
-	}
-
-	if (isset($locked) && $locked == "1") {
-		$skinData["url"] = "http://$domain/uploads/skins/{$uuid}.png";
-		$skinData["digest"] = hash_file('sha256', $_SERVER['DOCUMENT_ROOT'] . "/uploads/skins/{$uuid}.png");
-	}
-
-	$capeData = array();
-
-	// Add conditions for CAPE data
-	if ($cloakQueryResult !== false && isset($cloakQueryResult->cloak)) {
-		$cloakName = $cloakQueryResult->cloak;
-		$cloakPath = $_SERVER['DOCUMENT_ROOT'] . "/uploads/capes/{$cloakName}.png";
-		$sha256HashHexCloak = hash_file('sha256', $cloakPath);
-		$cloakUrl = "http://$domain/uploads/capes/{$cloakName}.png";
-
-		$capeData = array(
-			"url" => $cloakUrl,
-			"digest" => $sha256HashHexCloak
-		);
-
-		// Add metadata if $slim is set and equals "1"
-		if (isset($slim) && $slim == "1") {
-			$capeData["metadata"] = array("model" => "slim");
-		}
-	}
-
-	// Combine SKIN and CAPE data into the response
-	$responseData = array(
-		"SKIN" => $skinData,
-		"CAPE" => !empty($capeData) ? $capeData : []
-	);
-
-	// Set the content type to JSON
-	header('Content-Type: application/json');
-
-	// Encode the data as JSON and echo it
-	echo json_encode($responseData, JSON_PRETTY_PRINT);
-
-	}
 
 if (__URL__[2] == "extra") {
     // Include the file with corrected parameters
@@ -194,6 +124,24 @@ if (__URL__[2] == "extra") {
 
 }
 
+
+if (__URL__[2] == "skin") {
+	$uuid = __URL__[3];
+	$skin = __RDS__.'/uploads/skins/'.$uuid.'.png';
+
+	// Check if the file exists
+	if (!file_exists($skin)) {
+		die("File not found: $skin");
+	}
+
+	// Set the content type header
+	header('Content-Type: image/png');
+
+	// Read and output the file contents
+	readfile($skin);
+
+	exit();
+}
 
 if (__URL__[2] == "cape") {
         // Assuming you have already defined $conn (PDO connection) and $uuid

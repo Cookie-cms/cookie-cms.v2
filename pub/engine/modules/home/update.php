@@ -28,19 +28,59 @@ $stmt->execute();
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 // var_dump($resultr);
 $uuid = $result['uuid'];
-$iduser = $result['id'];
-$permissions = getUserPermissionsByUUID($uuid, $conn);
-// echo "UUID: $uuid. Permission level: $perm.";
-
+$profileId = $result['id'];
+// echo "UUID: $uuid. Profile ID: $profileId.";
+$permissions = GetProfilePermissions($profileId, $conn);
 if (isset($_POST['new_username']) && !empty($_POST['new_username'])) {
     $new_username = trim(filter_var($_POST['new_username']));
-
+    // Remove all non-alphanumeric characters
+    $new_username = preg_replace("/[^A-Za-z0-9]/", '', $new_username);
+    if ($new_username === "") {
+        header('Content-Type: application/json');
+        $responseData = array(
+            'error' => true,
+            'msg' => 'Invalid username format.'
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
+    }
     // echo "New username: $new_username.";
+    try {
+        $stmt = $conn->prepare("SELECT username FROM users_profiles WHERE username = :username");
+        $stmt->bindParam(':username', $new_username);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            header('Content-Type: application/json');
 
-    $stmt = $conn->prepare("UPDATE users SET username = :username WHERE uuid = :uuid");
-    $stmt->bindValue(':username', $new_username);
-    $stmt->bindValue(':uuid', $uuid);
-    $stmt->execute();
+            $responseData = array(
+                'error' => true,
+                'msg' => 'Username already exists.'
+            );
+            die(json_encode($responseData, JSON_PRETTY_PRINT));
+        } else {
+            $stmt = $conn->prepare("UPDATE users_profiles SET username = :username WHERE uuid = :uuid");
+            $stmt->bindValue(':username', $new_username);
+            $stmt->bindValue(':uuid', $uuid);
+            $stmt->execute();
+            header('Content-Type: application/json');
+            $responseData = array(
+                'error' => false,
+                'msg' => 'Username updated.'
+            );
+            echo json_encode($responseData, JSON_PRETTY_PRINT);
+        }
+    } catch (Exception $e) {
+        header('Content-Type: application/json');
+
+        $responseData = array(
+            'error' => true,
+            'msg' => $e->getMessage()
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
+    } 
+        
+    
+    
 
     // echo "Username updated.";
 }
@@ -64,21 +104,44 @@ if (isset($_FILES['new_skin']) && !empty($_FILES['new_skin']['name'])) {
 
     $file = $_FILES['new_skin'];
   
-    $mimeType = getimagesize($file['tmp_name'])['mime'];
+    
+    $imageInfo = getimagesize($file['tmp_name']);
+    if ($imageInfo === false) {
+        header('Content-Type: application/json');
+
+        $responseData = array(
+            'error' => true,
+            'msg' => 'Invalid file type. Only PNG allowed.'
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
+    }
+
+    $mimeType = $imageInfo['mime'];
     if ($mimeType !== 'image/png') {
         die("Invalid file type. Only PNG allowed.");
     }
-  
-    if (!in_array("skin.hd", $permissions) && !in_array("*", $permissions)) {
+
+    
+
+    $permissionToCheck = "profile.hdskin." . $profileId;
+    if (!in_array($permissionToCheck, $permissions) && !in_array("profile.hdskin.*", $permissions)) {
         $imageInfo = getimagesize($file['tmp_name']);
         $imageWidth = $imageInfo[0];
         $imageHeight = $imageInfo[1];
 
         if ($imageWidth > 64 || $imageHeight > 64) {
-            echo $permissions[0];
-            die("Image dimensions exceed 64x64 pixels for this permission level.");
+            header('Content-Type: application/json');
+
+            $responseData = array(
+                'error' => true,
+                'msg' => 'Image dimensions exceed 64x64 pixels for this permission level.'
+            );
+            die(json_encode($responseData, JSON_PRETTY_PRINT));
         }
     }
+
+    
+
   
     
     $imageName = $uuid . ".png";
@@ -86,53 +149,60 @@ if (isset($_FILES['new_skin']) && !empty($_FILES['new_skin']['name'])) {
     $uploadPath = $_SERVER['DOCUMENT_ROOT'] . "/uploads/skins/" . $imageName;
   
     if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
-        echo "File uploaded successfully. UUID: $uuid";
+            header('Content-Type: application/json');
+
+            $responseData = array(
+                'error' => false,
+                'msg' => 'Skin uploaded successfully.'
+            );
+            echo json_encode($responseData, JSON_PRETTY_PRINT);
   
   
     } else {
-        die("Failed to upload file.");
+        $responseData = array(
+            'error' => true,
+            'msg' => 'An error occurred while uploading the skin.'
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
     }
   }
 
 if (isset($_POST['setcloak'])) {
     $cloak = (int)$_POST['setcloak'];
-
-    echo "Cloak: $cloak.";
+    $user_id = $_POST['uuid'];
     if ($cloak === 0) {
-        $stmt = $conn->prepare('UPDATE `cape_users` SET `cid` = NULL WHERE `uid` = :uid');
-        $stmt->bindValue(':uid', $iduser);
-        $stmt->execute();
+        try {
+            $stmt = $conn->prepare('UPDATE `skins` SET `cape` = NULL WHERE `uuid` = :uuid');
+            $stmt->bindValue(':uuid', $user_id);
+            $stmt->execute();
+            $responseData = array(
+                'error' => false,
+                'msg' => "Cape removed successfully."
+            );
+            echo (json_encode($responseData, JSON_PRETTY_PRINT));
+        } catch (Exception $e) {
+            $responseData = array(
+                'error' => true,
+                'msg' => $e->getMessage()
+            );
+            die(json_encode($responseData, JSON_PRETTY_PRINT));
+        }
     }
-        // $stmt = $conn->prepare('SELECT * FROM `cloaks` WHERE `uid` = :uid AND `id` = :id');
-        // $stmt->bindValue(':uid', $iduser);
-        // $stmt->bindValue(':id', $cloak);
-        // $stmt->execute();
-        // $cloak = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // if (!$cloak) {
-        //     header('Location: /error/19');
-        //     exit();
-        // }
-
-        // $stmt = $conn->prepare('DELETE FROM `users_cloaks` WHERE `uid` = :uid');
-        // $stmt->bindValue(':uid', $user->id);
-        // $stmt->execute();
-
-        // $stmt = $conn->prepare('INSERT INTO `users_cloaks` (`uid`, `cid`) VALUES (:uid, :cid)');
-        // $stmt->bindValue(':uid', $user->id);
-        // $stmt->bindValue(':cid', $cloak['id']);
-        // $stmt->execute();
-
-        $stmt = $conn->prepare('UPDATE `cape_users` SET `cid` = :cid WHERE `uid` = :uid');
-        $stmt->bindValue(':uid', $iduser);
+    try {
+        $stmt = $conn->prepare('UPDATE `skins` SET `cape` = :cid WHERE `uuid` = :uuid');
+        $stmt->bindValue(':uuid', $user_id);
         $stmt->bindValue(':cid', $cloak);
         $stmt->execute();;
-
-
-    
-
-    // header("Location: /home");
-
-    // exit();
+        $responseData = array(
+            'error' => false,
+            'msg' => "Cape set successfully."
+        );
+        echo json_encode($responseData, JSON_PRETTY_PRINT);
+    } catch (Exception $e) {
+        $responseData = array(
+            'error' => true,
+            'msg' => $e->getMessage()
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
+    }
 }
-header("Location: /home");

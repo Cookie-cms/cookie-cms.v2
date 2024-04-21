@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+    <title>{{ Projectname }} &#x2022 Home</title>
+    <link rel="icon" type="image/x-icon" href="{{ icon }}">
+    <link href="{{ bootstrapcss }}" rel="stylesheet">
+    <script src="{{bootstrapjs}}"></script>
+    <link rel="stylesheet" href="{{bootstrapicons}}">
+    <link rel="stylesheet" href="{{ maincss }}">
+</head>
+<body>
+    {{ include 'inc/navbar.tpl' }}
+    
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">time</th>
+            <th scope="col">user</th>
+            <th scope="col">action</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {{ list }}
+        </tbody>
+      </table>
+  
+<script src="{{ skinjs }}"></script>
+<!-- <script src="<?php echo __RD__ ?>js/darktheme.js"></script> -->
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+
