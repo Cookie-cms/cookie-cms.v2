@@ -1,3 +1,4 @@
 pma/
 composer.phar
 /vendor/
+pub/engine/modules/configs/config.inc.yaml

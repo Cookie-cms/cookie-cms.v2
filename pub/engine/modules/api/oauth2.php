@@ -1,14 +1,20 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
+require_once __CI__ . "yamlReader.php";
+$file_path = __CM__ . 'configs/config.inc.yaml';
+$yaml_data = read_yaml($file_path);
+$discord = $yaml_data['discord'];
 
+$client_id = $discord['client_id'];
+$client_secret = $discord['secret_id'];
+$redirect_uri = $discord['redirect_url'];
+$scope = $discord['scopes'];
 if (isset($_GET['code'])) {
-    // Получение кода авторизации от Discord
-
-    // Обработка авторизации и получение информации о пользователе (подставьте свои данные)
-    $client_id = '1181148727826722816';
-    $client_secret = '5YaScJyKq0pDQxO_B5YlhUwcBnlkr37P';
-    $redirect_uri = 'http://cookiecms.local/api/discord'; // Укажите ваш редирект URI
-
     // Запрос на обмен кода авторизации на токен доступа
+    if (__URL__[2] == 'admin') {
+        $redirect_uri = $redirect_uri . '/admin';
+        // echo $redirect_uri;
+    }
     $code = $_GET['code'];
     $token_url = 'https://discord.com/api/oauth2/token';
 
@@ -54,7 +60,13 @@ if (isset($_GET['code'])) {
     // Передача информации в другой файл (например, process_user.php)
     $_SESSION['user_data'] = $user_data;
     // var_dump($user_data);
-    header('Location: /engine/modules/auth/discord/login.php');
+    if (__URL__[2] == 'admin') {
+        header('Location: /engine/modules/auth/admin/login.php');
+        // echo "admin";
+    } else {
+        // echo "default";
+        header('Location: /engine/modules/auth/discord/login.php');
+    }
 }else{
     header('Content-Type: application/json');
 	$response = json_encode(['error' => 'No modules found for this request']);

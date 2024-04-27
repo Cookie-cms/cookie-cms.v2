@@ -35,10 +35,10 @@ database:
 
 # smtp section
 smtp:
-  host: ""
+  host: "smtppro.zoho.eu"
   SMTPAuth: true
-  Username: ""
-  Password: ""
+  Username: "noreply@coffeedev.dev"
+  Password: "r%nytuD2"
   SMTPSecure: ""
   Port: 587
 
@@ -51,11 +51,11 @@ debug:
 
 # discord section
 discord:
-  enabled: false
-  client_id: ""
-  secret_id: ""
-  scopes: ""
-  redirect_url: ""
+  enabled: true
+  client_id: "1181148727826722816"
+  secret_id: "5YaScJyKq0pDQxO_B5YlhUwcBnlkr37P"
+  scopes: "identify"
+  redirect_url: "http://cookiecms.local/api/discord"
   bot: ""
   guild_id: 0
   role: 0

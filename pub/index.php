@@ -51,25 +51,28 @@ if ($page === $pages_data[$page]['uri'] && empty(__URL__[2])) {
             if (isset(__URL__[1])) {
                 $url = __URL__[1];
 
-                echo "e:$url";
+                // echo "e:$url";
                 $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['uri']}/$url.html";
                 $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/$url.php";
             } else {
                 $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}.html";
                 $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}.php";
-
-
             }
         }
     } else {
 
-            if (isset(__URL__[1])) {
+            if (isset(__URL__[1]) == "" && $pages_data[$page]['default'] !== null) {
+                $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}/{$pages_data[$page]['default']}.html";
+                $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/{$pages_data[$page]['default']}.php";
+            } elseif (isset(__URL__[1])) {
                 $url = __URL__[1];
                 $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['uri']}/$url.html";
                 $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/$url.php";
+                // echo "3";
             } else {
                 $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}.html";
                 $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}.php";
+                // echo "4";
             }
         
     }

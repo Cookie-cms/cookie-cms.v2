@@ -9,8 +9,7 @@ require __CM__ . "inc/discordlink.php";
 
 if (!isset($_SESSION['user_data']['id'])) {
     $url = generate_url();
-    echo "<a href='$url'>Login with Discord</a>";
-    // header("Location: $url");
+    header("Location: $url");
     exit;
 }
 
@@ -26,10 +25,10 @@ try {
     if ($user) {
         $_SESSION['id'] = $user['id'];
         // $_SESSION['uuid'] = $user['uuid'];
-        header("Location: /home");
+        header("Location: /admin/");
         exit();
     } else {
-        header("Location: /registerds");
+        header("Location: /");
     }
 } catch(PDOException $e) {
     echo "Error: " . $e->getMessage();

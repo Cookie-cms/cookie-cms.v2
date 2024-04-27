@@ -1,17 +1,9 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set('display_errors', true);
 require_once __DEF__;
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 require __CM__ . "inc/mysql.php";
 
 require __CM__ . "home/main.php";
-
-$loggeds = "";
-$avatarUrlDS = "";
-
-// $a = $_SESSION['uuid'];
-
 
 
 $variables = [
@@ -21,29 +13,29 @@ $variables = [
     'bootstrapjs' => "$bootstrapjs",
     'bootstrapicons' => "$bootstrapicons",
     'assets' => __TDS__ . 'assets/background.jpg',
-    'maincss' => __CSS__ . 'main.css',
+    'description' => 'Minecraft project with launcher x)',
+    'maincss' => __CSS__ . 'style3.css',
     // 'avatarUrl' => "$avatarUrl",
+    'js' => __TDS__ . "js/index.js",
+
     // 'logged' => "$logged",
     
 ];
-
-
-$stmt = $conn->prepare("SELECT * FROM audit");
+$stmt = $conn->prepare("SELECT id, dsid FROM users");
 $stmt->execute();
-$audit = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // var_dump($audit);
 ob_start(); // sssStart output buffering
 ?>
 
-<?php foreach ($audit as $entry): ?>
-    <tr>
-        <td><?php echo $entry['id']; ?></th>
-        <td><?php echo date('H:i d.m.Y', $entry['timestamp']); ?></td>
-        <td><?php echo $entry['user']; ?></td>
-        <td><?php echo $entry['action']; ?></td>
+<?php foreach ($users as $user): ?>
+    <tr onclick="toggleAccordion(this)" id="<?php echo $user['id']; ?>">
+        <td><?php echo $user['id']; ?></th>
+        <td><?php echo $user['dsid']; ?></td>
     </tr>
 <?php endforeach; ?>
+
 <?php
 $listContent = ob_get_clean(); // Get the content and clear the buffer
 
