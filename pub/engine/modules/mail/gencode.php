@@ -21,10 +21,10 @@ function generatecode($userid){
         $randomString .= $characters[random_int(0, $max)];
     }
 
-    $code = password_hash($randomString, PASSWORD_BCRYPT);
-    $stmt = $conn->prepare("INSERT INTO mail_codes (userid, code) VALUES (:userid, :code, 'mail')");
+    
+    $stmt = $conn->prepare("INSERT INTO mail_codes (userid, code) VALUES (:userid, :code)");
     $stmt->bindParam(':userid', $userid);
-    $stmt->bindParam(':code', $code);
+    $stmt->bindParam(':code', $randomString);
     $stmt->execute();
     return $randomString;
 }

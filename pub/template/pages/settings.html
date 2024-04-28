@@ -26,26 +26,18 @@
 </style>
 <body>
     {{ include 'inc/navbar.tpl' }}
-    
-<!-- <div id="navbarContainer"></div> -->
-<div class="container mt-3">
-<!-- <div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" id="toggleButton" checked>
-    <label class="form-check-label" for="toggleButton">Toggle Dark Mode</label>
-</div> -->
-</div>
-
-</div>
-<style>
-  
-    .col-md-4 {
-        max-height: 520px; /* Set a fixed height */
-        overflow-y: auto; /* Enable vertical scrolling if the content exceeds the height */
-    }
-</style>
-  <!-- <span class="slider"></span> -->
-</label>
-
+    {{ if $mailverify == true }}
+    <div class="alert alert-danger" role="alert" style="width: 1500px; margin: 0 auto;">
+      Pls verify your mail
+    </div>
+    </div>
+    {{ endif }}
+    {{ if locked == true }}
+    <div class="alert alert-danger" role="alert" style="width: 1500px; margin: 0 auto;">
+      Your account is locked pls contact with <a href="/faq#locked" class="alert-link">support</a> 
+    </div>
+    </div>
+    {{ endif }}
      <div class="bg-secondary-soft container rounded  mt-5">
             <form method="post" action="" enctype="multipart/form-data">
                          

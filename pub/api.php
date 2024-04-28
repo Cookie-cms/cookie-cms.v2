@@ -15,6 +15,7 @@ if (isset($yaml_data[$requestedModule])) {
     $uriParameters = http_build_query($_GET);
     $data = $yaml_data[$requestedModule];
     $moduleFilePath = __CD__ . "modules/api/{$data['dir']}.php";
+
     if (file_exists($moduleFilePath)) {
         include $moduleFilePath;
     } else {

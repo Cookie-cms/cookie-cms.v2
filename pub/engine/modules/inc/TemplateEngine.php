@@ -31,16 +31,16 @@ class TemplateEngine {
 
     public function render($template) {
         $content = file_get_contents($template);
-
+    
         $content = preg_replace_callback('/{{\s*include\s*\'(.*?)\'\s*}}/', function($matches) {
             $includeFile = $matches[1];
-
+    
             if (defined($includeFile)) {
                 $includeFile = constant($includeFile);
             }
-
+    
             $includeFile = rtrim($_SERVER['DOCUMENT_ROOT'] . '/template' , '/') . '/' . $includeFile;
-
+    
             if (file_exists($includeFile)) {
                 return $this->includeFile($includeFile);
             } else {
@@ -48,22 +48,31 @@ class TemplateEngine {
                 return '';
             }
         }, $content);
-
+    
         $content = preg_replace_callback('/{{\s*if\s*(.*?)\s*}}(.*?)(?:{{\s*else\s*}}(.*?))?{{\s*endif\s*}}/s', function($matches) {
             $condition = $matches[1];
             $ifContent = $matches[2];
             $elseContent = isset($matches[3]) ? $matches[3] : '';
-
+    
             return '<?php if (' . $this->parseCondition($condition) . '): ?>' . $this->parseVariables($ifContent) . '<?php else: ?>' . $this->parseVariables($elseContent) . '<?php endif; ?>';
         }, $content);
-
-
+    
+        $content = preg_replace_callback('/{{\s*if\s*(.*?)\s*and\s*(.*?)\s*}}(.*?)(?:{{\s*else\s*}}(.*?))?{{\s*endif\s*}}/s', function($matches) {
+            $condition1 = $matches[1];
+            $condition2 = $matches[2];
+            $ifContent = $matches[3];
+            $elseContent = isset($matches[4]) ? $matches[4] : '';
+    
+            return '<?php if (' . $this->parseCondition($condition1) . ' && ' . $this->parseCondition($condition2) . '): ?>' . $this->parseVariables($ifContent) . '<?php else: ?>' . $this->parseVariables($elseContent) . '<?php endif; ?>';
+        }, $content);
+    
         $content = $this->parseVariables($content);
-
+    
         ob_start();
         eval(' ?>' . $content . '<?php ');
         return ob_get_clean();
     }
+    
 
     
     

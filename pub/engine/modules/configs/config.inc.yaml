@@ -6,7 +6,8 @@ basic:
   registration: true
   # if mail on, it will require account verification
   requiredVerify: false
-  domain: "cookiecms.local"
+  ssl: true
+  domain: "cookiecms.coffeedev.dev"
   # version: company/club
   version: club
   blocklocalhost: false

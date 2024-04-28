@@ -4,27 +4,37 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf82aab9f401252e353b6e97769a6c91a
+class ComposerStaticInit046a85b0fdc0c1a0ce578e2e98ae3c2f
 {
+    public static $files = array (
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Symfony\\Component\\Yaml\\' => 23,
+        ),
         'P' => 
         array (
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'F' => 
-        array (
-            'Firebase\\JWT\\' => 13,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Symfony\\Component\\Yaml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/yaml',
+        ),
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
-        ),
-        'Firebase\\JWT\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
     );
 
@@ -35,9 +45,9 @@ class ComposerStaticInitf82aab9f401252e353b6e97769a6c91a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf82aab9f401252e353b6e97769a6c91a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf82aab9f401252e353b6e97769a6c91a::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitf82aab9f401252e353b6e97769a6c91a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit046a85b0fdc0c1a0ce578e2e98ae3c2f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit046a85b0fdc0c1a0ce578e2e98ae3c2f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit046a85b0fdc0c1a0ce578e2e98ae3c2f::$classMap;
 
         }, null, ClassLoader::class);
     }

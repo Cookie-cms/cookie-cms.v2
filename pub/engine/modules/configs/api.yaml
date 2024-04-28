@@ -7,3 +7,6 @@ skin:
 gravitskins: 
   uri: gravitskins
   dir: gravitskins
+mail: 
+  uri: mail
+  dir: mail

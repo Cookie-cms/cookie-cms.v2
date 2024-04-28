@@ -19,6 +19,6 @@ define('__AS__', __TD__ . 'assets/');
 define('__INT__', __TD__ . 'inc/');
 
 require_once __CI__ . "TemplateEngine.php";
-// require_once __CI__ . "yamlReader.php";
+require_once __CI__ . "yamlReader.php";
 // require_once __CI__ . "mail.php";
 include  __CD__ . "pages/global.php";

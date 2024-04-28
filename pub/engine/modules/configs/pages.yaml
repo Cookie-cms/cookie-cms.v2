@@ -3,6 +3,7 @@ home:
   maintenance: false
   template: home
   variablesPath : home
+  default: ""
 admin:
   uri: admin
   maintenance: false
@@ -16,3 +17,4 @@ index:
   maintenance: true
   template: index
   variablesPath : index
+  default: "1"

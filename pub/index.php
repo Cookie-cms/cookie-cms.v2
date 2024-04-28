@@ -61,7 +61,7 @@ if ($page === $pages_data[$page]['uri'] && empty(__URL__[2])) {
         }
     } else {
 
-            if (isset(__URL__[1]) == "" && $pages_data[$page]['default'] !== null) {
+            if (isset(__URL__[1])) {
                 $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}/{$pages_data[$page]['default']}.html";
                 $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/{$pages_data[$page]['default']}.php";
             } elseif (isset(__URL__[1])) {

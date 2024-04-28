@@ -6,13 +6,19 @@ require __CM__ . "inc/checkperms.php";
 
 $owner= $_SESSION['id'];
 
-$stmt = $conn->prepare("SELECT mail, dsid FROM users WHERE BINARY id = :owner");
+$stmt = $conn->prepare("SELECT mail, dsid, mail_verify FROM users WHERE BINARY id = :owner");
 $stmt->bindParam(':owner', $owner); // Replace $owner with the actual value you want to match
 $stmt->execute();
 
 $ownerinfo = $stmt->fetch(PDO::FETCH_ASSOC);
 $ownermail = $ownerinfo['mail'] ?? "Not found";
 $ownerds = $ownerinfo['dsid'];
+if ($ownerinfo['mail_verify'] !== "0") {
+    $mailverify = true;
+} else {
+    $mailverify = false;
+}
+
 $stmt = $conn->prepare("SELECT username, uuid FROM users_profiles WHERE BINARY owner = :owner");
 $stmt->bindParam(':owner', $owner); // Replace $owner with the actual value you want to match
 $stmt->execute();
@@ -29,7 +35,8 @@ if(isset($_COOKIE["show"])) {
     setcookie('show', null, -1, '/');
     echo $cookieValue;
 }
-
+$locked = true;
+echo $locked;
 $variables = [
     'Projectname' => "$projectname",
     'icon' => __TDS__ . "$icon",
@@ -44,6 +51,8 @@ $variables = [
     'maincss' => __CSS__ . 'main.css',
     'mail' => "$ownermail",
     'dsid' => "$ownerds",
+    'mailverify' => "$mailverify",
+    'locked' => "$locked",
 
 ];
 // $userId = $_SESSION['id'];

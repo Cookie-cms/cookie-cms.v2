@@ -6,6 +6,8 @@ include __CM__ . "inc/mysql.php";
 require __CM__ . "inc/webhook.php";
 require_once __CI__ . "yamlReader.php";
 
+require __CM__ . "mail/sendmail.php";
+require __CM__ . "mail/gencode.php";
 $file_path = __CM__ . 'configs/config.inc.yaml';
 $yaml_data = read_yaml($file_path);
 
@@ -37,7 +39,12 @@ try {
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
-        die("This mail/discord is already in use. Please choose another.");
+        header('Content-Type: application/json');
+        $responseData = array(
+            'error' => true,
+            'msg' => 'This mail/discord is already in use. Please choose another.'
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
     }
 
     // Check if the user has already registered based on IP
@@ -46,12 +53,23 @@ try {
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
-        die("You already registered.");
+        header('Content-Type: application/json');
+        $responseData = array(
+            'error' => true,
+            'msg' => 'You already registered.'
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
     }
 
     // Check if form data is complete
     if (!isset($_POST['password']) || !isset($_POST['re_password'])) {
-        die("Form data incomplete.");
+        header('Content-Type: application/json');
+        $responseData = array(
+            'error' => true,
+            'msg' => 'Form data incomplete.'
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
+
     }
 
     // Validate and hash password
@@ -59,12 +77,17 @@ try {
     $re_pass = validate($_POST['re_password']);
 
     if ($pass !== $re_pass) {
-        die("Passwords do not match.");
+        header('Content-Type: application/json');
+        $responseData = array(
+            'error' => true,
+            'msg' => 'Passwords do not match.'
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
     }
 
     $hashed_password = password_hash($pass, PASSWORD_BCRYPT);
     $length = 16;
-    $id = mt_rand(100000000000000000, 999999999999999999);
+    $id = mt_rand(000000000000000000, 999999999999999999);
 
     // Insert user into the database
     $stmt = $conn->prepare("INSERT INTO users (id, password, dsid, mail, ip) VALUES (:id, :pass, :dsid, :mail, :ip)");
@@ -74,8 +97,18 @@ try {
     $stmt->bindParam(':mail', $dsmail);
     $stmt->bindParam(':ip', $ip);
     $stmt->execute();
-
-    $webhookUrl = $yaml_data['logs']['accounts']['token'] . "?thread_id=1209531443626119178";
+    if ($mail) {
+        $email = $dsmail;
+        $username = $_SESSION['user_data']['username'];
+        // function send welcome email
+        // function send verification email
+        $date = time();
+        // welcomemsg($email, $id, $date, $username);
+        $code = generatecode($id);
+        echo $code;
+        verificationmsg($email, $username, $code);
+    }   
+    $webhookUrl = $yaml_data['logs']['accounts']['token'];
 
     $embedData = [
         "embed" => [
@@ -88,15 +121,16 @@ try {
 
     sendDiscordEmbed($webhookUrl, $embedData);
 
-    $user = [
-        'id' => $conn->lastInsertId(),
-    ];
-
     if ($user) {
         http_response_code(200);
         $_SESSION['id'] = $id;
-        echo "Request successful";
-        return;
+        header('Content-Type: application/json');
+        $responseData = array(
+            'error' => false,
+            'msg' => 'success'
+        );
+
+        return(json_encode($responseData, JSON_PRETTY_PRINT));
     }
 } catch (PDOException $e) {
     // echo "An error occurred during registration. Please try again later.";

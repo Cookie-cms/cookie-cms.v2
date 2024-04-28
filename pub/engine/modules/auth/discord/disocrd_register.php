@@ -13,6 +13,8 @@ if (isset($_SESSION['user_data']['id'])) {
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 
 require __CM__ . "inc/mysql.php";
+require __CM__ . "mail/sendmail.php";
+require __CM__ . "mail/gencode.php";
 
 function validate($data){
     $data = trim($data);
@@ -30,34 +32,50 @@ if (isset($_POST['password']) && isset($_POST['re_password'])) {
         exit();
     }
 
-    $length = 3;
-    $id = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length) . '-' . substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
+    $id = mt_rand(000000000000000000, 999999999999999999);
     $dsid = $_SESSION['user_data']['id'];
 
+    
     $hashed_password = password_hash($pass, PASSWORD_BCRYPT);
+    if ($_SESSION['user_data']['email']) {
+        $email = $_SESSION['user_data']['email'];
+        $username = $_SESSION['user_data']['username'];
+        // function send welcome email
+        
+        // function send verifi cation email
+        try {
+            $stmt = $conn->prepare("INSERT INTO users (id, dsid,password, mail) VALUES (:id, :dsid, :pass, :mail)");
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':dsid', $id);
+            $stmt->bindParam(':pass', $hashed_password);
+            $stmt->bindParam(':mail', $email);
+            $stmt->execute();
 
-    try {
-        $stmt = $conn->prepare("INSERT INTO users (id, dsid,password) VALUES (:id, :dsid, :pass)");
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':dsid', $id);
-        $stmt->bindParam(':pass', $hashed_password);
-        $stmt->execute();
+            $_SESSION['id'] = $id;
+        } catch (PDOException $e) {
+            echo "An error occurred during registration. Please try again later.";
+            error_log("PDOException: " . $e->getMessage(), 0);
+            exit();
+        }
+        welcomemsg($email, $id, time(), $username);
+        $code = generatecode($userid);
+        verificationmsg($email, $code, $username);
+    } else {
+        try {
+            $stmt = $conn->prepare("INSERT INTO users (id, dsid,password) VALUES (:id, :dsid, :pass)");
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':dsid', $id);
+            $stmt->bindParam(':pass', $hashed_password);
+            $stmt->execute();
 
-        // Assuming $user is fetched from somewhere in your code, adjust this part accordingly
-        // if ($user) {
-        //     $_SESSION['id'] = $user['id'];
-        // } else {
-        //     echo "Failed to fetch user data.";
-        //     exit();
-        // }
-        // $_SESSION['id'] = $conn->lastInsertId();  // Get the last inserted ID
-        // var_dump($_SESSION['id']);
-        $_SESSION['id'] = $id;
-    } catch (PDOException $e) {
-        echo "An error occurred during registration. Please try again later.";
-        error_log("PDOException: " . $e->getMessage(), 0);
-        exit();
+            $_SESSION['id'] = $id;
+        } catch (PDOException $e) {
+            echo "An error occurred during registration. Please try again later.";
+            error_log("PDOException: " . $e->getMessage(), 0);
+            exit();
+        }
     }
+    
 } else {
     echo "Form data incomplete.";
     exit();

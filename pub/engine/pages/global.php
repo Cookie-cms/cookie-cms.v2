@@ -19,6 +19,15 @@ $indexdescription = $yaml_data['indexdescription'];
 $navvbarpic = $yaml_data['navvbarpic'];
 $snow = $yaml_data['snow'];
 
+$ConfigFilePath = __CM__ . 'configs/config.inc.yaml';
+$CFPyaml_data = read_yaml($ConfigFilePath);
+
+
+if ($CFPyaml_data['basic']['ssl'] ==  true) {
+    $urlicon = "https://" . $CFPyaml_data['basic']['domain'] . __TDS__ . "$icon";
+} else {
+    $urlicon = "http://" . $CFPyaml_data['basic']['domain'] . __TDS__ . "$icon";
+}
 
 
 ?>

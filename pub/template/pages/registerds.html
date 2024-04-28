@@ -95,10 +95,11 @@
                 success: function(response) {
                     // Handle the successful response here (update UI, show messages, etc.)
                     // // console.log(response);
-                     window.location.replace("/settings");
+                    //  window.location.replace("/settings");
                 },
                 // Handle AJAX errors
                 success: function(response) {
+                    console.log(response);
                 // Check if the response contains the error message
                 if (response.includes("Passwords empty or do not match.")) {
                     const toastTrigger = document.getElementById('liveToastBtn');
