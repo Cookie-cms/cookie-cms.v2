@@ -2,16 +2,6 @@
 error_reporting(E_ALL);
 ini_set('display_errors', true);
 
-// function customError($errno, $errstr) {
-//     $errorMessage = "[$errno] $errstr";
-//     return $errorMessage;
-// }
-// // echo $errorMessage;
-
-// // Set error handler
-// set_error_handler("customError");
-
-// echo $es;
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 define('__DEF__', $_SERVER['DOCUMENT_ROOT'] . '/define.php');
@@ -42,64 +32,65 @@ $templatePath = '';
 $variablesPath = __DIR__ . "/engine/pages/{$page}.php";
 $queryParams = $_GET;
 
-// echo "$url";
-if ($page === $pages_data[$page]['uri'] && empty(__URL__[2])) {
-    if ($pages_data[$page]['maintenance'] == "true") {
-        if ($maintenanceStatus) {
-            $templatePath = __DIR__ . "/template/pages/maintenance.tpl";
-        } else {
-            if (isset(__URL__[1])) {
-                $url = __URL__[1];
 
-                // echo "e:$url";
-                $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['uri']}/$url.html";
-                $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/$url.php";
-            } else {
-                $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}.html";
-                $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}.php";
-            }
-        }
-    } else {
 
-            if (isset(__URL__[1])) {
-                $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}/{$pages_data[$page]['default']}.html";
-                $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/{$pages_data[$page]['default']}.php";
-            } elseif (isset(__URL__[1])) {
-                $url = __URL__[1];
-                $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['uri']}/$url.html";
-                $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/$url.php";
-                // echo "3";
-            } else {
-                $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}.html";
-                $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}.php";
-                // echo "4";
-            }
-        
-    }
-} else {
-    if ($maintenanceStatus) {
-        $templatePath = __DIR__ . "/template/pages/maintenance.html";        
+$templateDir = __DIR__ . "/template/pages/";
+$engineDir = __DIR__ . "/engine/pages/";
+
+if (isset($pages_data[$page]) && $page === $pages_data[$page]['uri']) {
+    $template = $pages_data[$page]['template'];
+    $variablesPath = $pages_data[$page]['variablesPath'];
+    $default = $pages_data[$page]['default'];
+    $url = isset(__URL__[1]) ? __URL__[1] : '';
+
+    if ($pages_data[$page]['maintenance'] == "false" && $maintenanceStatus) {
+        $templatePath = $templateDir . "maintenance.html";
+        $variablesPath = $engineDir . "index.php";
+    } else if ($pages_data[$page]['category'] == "true") {
+        $templatePath = $templateDir . "$template/" . ($url ? "$url.html" : "$default.html");
+        $variablesPath = $engineDir . "$variablesPath/" . ($url ? "$url.php" : "$default.php");
     } else {
-        $templatePath = __DIR__ . "/template/pages/{$page}.html";
+        $templatePath = $templateDir . "$template.html";
+        $variablesPath = $engineDir . "$variablesPath.php";
     }
 }
 
+
+
+// if ($maintenanceStatus) {
+//     $templatePath = __DIR__ . "/template/pages/maintenance.html";        
+// } else {
+//     $templatePath = __DIR__ . "/template/pages/{$page}.html";
+// }
+
+// $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}/{$pages_data[$page]['default']}.html";
+// $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/{$pages_data[$page]['default']}.php";
+
+// $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['uri']}/$url.html";
+// $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}/$url.php";
+
+// $templatePath = __DIR__ . "/template/pages/{$pages_data[$page]['template']}.html";
+// $variablesPath = __DIR__ . "/engine/pages/{$pages_data[$page]['variablesPath']}.php";
+
 if ($debug) {
-    $debugphp = __DIR__ . "/engine/modules/inc/debug.php";
-    $debughtml = __DIR__ . '/template/inc/debug.html';
-    if (file_exists($debugphp)) {
-        include $debugphp;
-        $debugshow = new TemplateEngine();
-        foreach ($variables as $key => $value) {
-            $debugshow->assign($key, $value);
-        }
-        $debugshow->assignHeader('headerVar', 'Header Variable');
-        $debugshow->assign('queryParams', $queryParams);
-        $output = $debugshow->render($debughtml);
-        echo $output;
-    } else {
-        echo "Debug file not found.";
-    }
+    echo '<p style="font-size: 20px;">Template Path: ' . $templatePath . '</p>';
+echo '<p style="font-size: 20px;">Core Page Path: ' . $variablesPath . '</p>';
+echo '<p style="font-size: 20px;">Requested URI: ' . $requestUri . '</p>';
+    // $debugphp = __DIR__ . "/engine/modules/inc/debug.php";
+    // $debughtml = __DIR__ . '/template/inc/debug.html';
+    // if (file_exists($debugphp)) {
+    //     include $debugphp;
+    //     $debugshow = new TemplateEngine();
+    //     foreach ($variables as $key => $value) {
+    //         $debugshow->assign($key, $value);
+    //     }
+    //     $debugshow->assignHeader('headerVar', 'Header Variable');
+    //     $debugshow->assign('queryParams', $queryParams);
+    //     $output = $debugshow->render($debughtml);
+    //     echo $output;
+    // } else {
+    //     echo "Debug file not found.";
+    // }
 }
 
 $redirectTo = null;
@@ -119,9 +110,14 @@ if ($redirectTo) {
             include $variablesPath;
         }
         $templateEngine = new TemplateEngine();
-        foreach ($variables as $key => $value) {
-            $templateEngine->assign($key, $value);
+        if (isset($variables)) {
+            foreach ($variables as $key => $value) {
+                $templateEngine->assign($key, $value);
+            }        
+        } else {
+            $variables = [];
         }
+        
         $templateEngine->assignHeader('headerVar', 'Header Variable');
         $templateEngine->assign('queryParams', $queryParams);
         $output = $templateEngine->render($templatePath);

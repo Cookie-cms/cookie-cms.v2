@@ -72,7 +72,7 @@ function verificationmsg($email, $username, $code, $userid) {
     
     $mail->addAddress($email);
 
-    $mail->Subject = 'Welcome to our project';
+    $mail->Subject = 'Mail Verification';
     $mail->Body = $message; 
     $mail->isHTML(true);
     $mail->send();

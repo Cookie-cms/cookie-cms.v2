@@ -22,7 +22,7 @@ logs:
 
 # maintenance section
 maintenance:
-  enabled: false
+  enabled: true
   comment: ""
   unixstemp: ""
 
@@ -45,7 +45,7 @@ smtp:
 
 # debug section
 debug:
-  debug: false
+  debug: true
   development: false
   generatorusername: false
   outLogMasterFasterErrorOutPut: false

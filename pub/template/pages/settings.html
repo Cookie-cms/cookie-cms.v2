@@ -23,9 +23,13 @@
     background-color:white; 
     filter: none; /* Remove the blur on hover */
   }
+
+
+
 </style>
 <body>
-    {{ include 'inc/navbar.tpl' }}
+    {{ include 'inc/navbar.html' }}
+
     {{ if $mailverify == true }}
     <div class="alert alert-danger" role="alert" style="width: 1500px; margin: 0 auto;">
       Pls verify your mail
@@ -71,8 +75,8 @@
                                 <input class="form-control col-md-6" type="password" id="new_skin" name="new_skin" disabled>
                             </div>
                             <div class="col-md-6" style="margin-top: 25px;">
-                              <label for="skin" class="form-label" style="">Code:</label>
-                              <button class="btn btn-primary col-md-6" type="button" data-bs-toggle="modal" data-bs-target="#coupons">Upload</button>
+                              <label for="skin" class="form-label" style=""></label>
+                              <button class="btn btn-success col-md-6" type="button" data-bs-toggle="modal" data-bs-target="#coupons">Code</button>
                           </div>
                             <div class="col-md-6">
                                 <label for="cape" class="form-label" style="display: none;">Cape:</label>
@@ -177,24 +181,20 @@
       </div>
       
       <div class="modal-body">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="col-md-6">
-              <form action="" method="post">
-                <label for="Type" class="form-label">Type:</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option value="0">Mail verify</option>
-                  <option value="1">Referral </option>
-                  <option value="2">Coupon</option>
-                </select>
-                <br>
-                <label for="Code" class="form-label">Code:</label>
-                <input type="text" name="code" class="form-control mt-3" placeholder="Code" id="check">
-                <button type="submit" class="btn btn-primary mt-3" name="submit">Submit</button>
-              </form>
-            </div>
+        <form action="" method="post">
+          <label for="Type" class="form-label">Type:</label>
+          <select class="form-select" aria-label="Default select example">
+            <option value="0">Mail verify</option>
+            <option value="1">Referral </option>
+            <option value="2">Coupon</option>
+          </select>
+          <br>
+          <div class="col-md-6">
+            <label for="Code" class="form-label">Code:</label>
+            <input type="text" name="code" class="form-control mt-3" placeholder="Code" id="check">
           </div>
-        </div>
+          <button type="submit" class="btn btn-primary mt-3" name="submit">Submit</button>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

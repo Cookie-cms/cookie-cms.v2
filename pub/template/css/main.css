@@ -6,6 +6,7 @@ body {
     color: #FFF;
     font-family: "Julius Sans One";
     /* font-size: 45px; */
+    height: 2000px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -18,4 +19,29 @@ body {
 /*     !display: flex; */
     align-items: center;
     justify-content: center;
+}
+.cover-container {
+    max-width: 42em;
+}
+.cover {
+    background: url('your-cover-image.jpg') no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+}
+.featurette-divider {
+    margin: 5rem 0;
+}
+@media (max-width: 768px) {
+    .featurette-heading {
+        font-size: 1.5rem;
+    }
+    .lead {
+        font-size: 1rem;
+    }
 }

@@ -106,7 +106,7 @@ try {
         // welcomemsg($email, $id, $date, $username);
         $code = generatecode($id);
         echo $code;
-        verificationmsg($email, $username, $code);
+        verificationmsg($email, $username, $code, $id);
     }   
     $webhookUrl = $yaml_data['logs']['accounts']['token'];
 

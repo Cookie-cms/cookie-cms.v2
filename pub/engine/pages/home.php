@@ -124,16 +124,37 @@ foreach ($permissions as $permission) {
         $capes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }}
 
-
-
+$sql = 'SELECT s.`cape`
+    FROM `users_profiles` u
+    LEFT JOIN `skins` s ON s.`uuid` = u.`uuid`
+    WHERE u.`uuid` = :uuid';
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':uuid', $uuid, PDO::PARAM_STR);
+$stmt->execute();
+$c = $stmt->fetch(PDO::FETCH_OBJ);
 ob_start(); // Start output buffering 
 ?>
+    <input type="hidden" name="uuid" id="uuid" value="<?php echo $uuid?>">
+
 <?php foreach ($capes as $cape): ?>
-        <img src="api/skin/cloakview/<?php echo $cape['cloak']; ?>/2/128">
-        <input type="hidden" name="uuid" id="uuid" value="<?php echo $uuid?>">
-        <button type="submit" class="btn btn-primary" name="setcloak" value="<?php echo $cape['id']; ?>">set</button>
+    <img src="api/skin/cloakview/<?php echo $cape['cloak']; ?>/2/128">
+    <button type="submit" class="btn btn-primary" name="setcloak" value="<?=$cape['id']?>" <?=$cape['id']==$c->cape?'disabled':''?>>set</button>
 <?php endforeach; ?>
+
 <?php
 $cape = ob_get_clean(); // Get the content and clear the buffer
 $variables['cape'] = $cape;
+
+ob_start(); // Start output buffering 
+?>
+<form method="post" id="rmcape">
+
+<input type="hidden" name="uuid" id="uuid" value="<?php echo $uuid?>">
+<button type="submit" class="btn btn-danger" name="setcloak" value="0" >reset</button>
+
+</form>
+
+<?php
+$capereset = ob_get_clean(); // Get the content and clear the buffer
+$variables['capereset'] = $capereset;
 // Remove the closing PHP tag

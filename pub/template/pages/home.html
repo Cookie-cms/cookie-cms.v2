@@ -7,9 +7,22 @@
     <script src="{{bootstrapjs}}"></script>
     <link rel="stylesheet" href="{{bootstrapicons}}">
     <link rel="stylesheet" href="{{ maincss }}">
+    <style>
+        #skin_container {
+            width: 100%;
+            height: auto;
+            /* border: 1px solid #ddd; Add border to the canvas */
+            border-radius: 5px; /* Add border-radius for rounded corners */
+        }
+        @media (max-width: 768px) {
+            .col-md-4 {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    {{ include 'inc/navbar.tpl' }}
+    {{ include 'inc/navbar.html' }}
     
 <div class="container mt-3">
 <!-- <div class="form-check form-switch">
@@ -68,10 +81,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <form method="post" id="capes">
-            <input type="hidden" name="uuid" id="uuid" value="{{ uuid }}">
-            <button type="submit" class="btn btn-danger" name="setcloak" value="0">reset</button>
-        </form>
+          
+        
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           
         </div>
@@ -84,6 +95,7 @@
                         <form method="post" id="cape">
 
                         {{ cape }}
+
                         </form>
 
                     </div>
@@ -92,6 +104,9 @@
             </div>
         </div>
         <div class="modal-footer">
+            
+            {{ capereset }}
+
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Save changes</button>
         </div>
@@ -217,55 +232,130 @@
             });
         });
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('cape');
-            const toastLiveExample = document.getElementById('liveToast');
-            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-            const toastBodyElement = document.getElementById('toastBody');
+    const form = document.getElementById('cape');
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBootstrap = new bootstrap.Toast(toastLiveExample);
+    const toastBodyElement = document.getElementById('toastBody');
 
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent the default form submission
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
 
-                // Get the form data
-                const formData = new FormData(this);
+        // Get the form data
+        const formData = new FormData(this);
 
-                // Get the clicked button
-                const button = document.activeElement;
-                if (button.name) {
-                    formData.append(button.name, button.value);
-                }
+        // Get the clicked button
+        const button = document.activeElement;
+        if (button.name) {
+            formData.append(button.name, button.value);
+        }
 
-                // Make an Ajax request
-                fetch('engine/modules/home/update.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Update the text content with the message from the response
-                    toastBodyElement.textContent = data.msg;
+        // Make an Ajax request
+        fetch('engine/modules/home/update.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Log the raw response
+            return response.text();
+        })
+        .then(text => {
+            // Log the full response
+            console.log('Raw Response:', text);
 
-                    // Check if the response contains an error
-                    if (data.error) {
-                        // Add the 'text-bg-danger' class and remove the 'text-bg-success' class
-                        toastLiveExample.classList.add('text-bg-danger');
-                        toastLiveExample.classList.remove('text-bg-success');
-                    } else {
-                        // Add the 'text-bg-success' class and remove the 'text-bg-danger' class
-                        toastLiveExample.classList.add('text-bg-success');
-                        toastLiveExample.classList.remove('text-bg-danger');
+            // Parse the JSON response
+            const data = JSON.parse(text);
 
-                        // Update the page content with the new data
-                        // This will depend on the structure of your data and your page
-                        // For example, if data.newContent is the new HTML for an element:
-                    }
+            // Update the text content with the message from the response
+            toastBodyElement.textContent = data.msg;
 
-                    // Show the toast
-                    toastBootstrap.show();
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-            });
+            // Check if the response contains an error
+            if (data.error) {
+                // Add the 'text-bg-danger' class and remove the 'text-bg-success' class
+                toastLiveExample.classList.add('text-bg-danger');
+                toastLiveExample.classList.remove('text-bg-success');
+            } else {
+                // Add the 'text-bg-success' class and remove the 'text-bg-danger' class
+                toastLiveExample.classList.add('text-bg-success');
+                toastLiveExample.classList.remove('text-bg-danger');
+
+                // Update the page content with the new data
+                // This will depend on the structure of your data and your page
+                // For example, if data.newContent is the new HTML for an element:
+            }
+
+            // Show the toast
+            toastBootstrap.show();
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
         });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('rmcape');
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBootstrap = new bootstrap.Toast(toastLiveExample);
+    const toastBodyElement = document.getElementById('toastBody');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get the form data
+        const formData = new FormData(this);
+
+        // Get the clicked button
+        const button = document.activeElement;
+        if (button.name) {
+            formData.append(button.name, button.value);
+        }
+
+        // Make an Ajax request
+        fetch('engine/modules/home/update.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Log the raw response
+            return response.text();
+        })
+        .then(text => {
+            // Log the full response
+            console.log('Raw Response:', text);
+
+            // Parse the JSON response
+            const data = JSON.parse(text);
+
+            // Update the text content with the message from the response
+            toastBodyElement.textContent = data.msg;
+
+            // Check if the response contains an error
+            if (data.error) {
+                // Add the 'text-bg-danger' class and remove the 'text-bg-success' class
+                toastLiveExample.classList.add('text-bg-danger');
+                toastLiveExample.classList.remove('text-bg-success');
+            } else {
+                // Add the 'text-bg-success' class and remove the 'text-bg-danger' class
+                toastLiveExample.classList.add('text-bg-success');
+                toastLiveExample.classList.remove('text-bg-danger');
+
+                // Update the page content with the new data
+                // This will depend on the structure of your data and your page
+                // For example, if data.newContent is the new HTML for an element:
+            }
+
+            // Show the toast
+            toastBootstrap.show();
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+});
     </script>
 

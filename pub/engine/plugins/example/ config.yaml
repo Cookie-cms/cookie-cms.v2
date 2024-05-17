@@ -1,0 +1,19 @@
+# Plugin Configuration
+name: Example Plugin
+version: 1.0.0
+author: Your Name
+description: A sample plugin for demonstration purposes
+sql: sql/version1.sql
+main: main.php
+
+# Plugin Settings
+settings:
+  enable_feature1: true
+  enable_feature2: false
+  feature3_threshold: 10
+
+
+# Plugin Dependencies
+dependencies:
+  - plugin1
+  - plugin2

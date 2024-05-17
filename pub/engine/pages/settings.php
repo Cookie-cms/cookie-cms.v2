@@ -36,7 +36,7 @@ if(isset($_COOKIE["show"])) {
     echo $cookieValue;
 }
 $locked = true;
-echo $locked;
+// echo $locked;
 $variables = [
     'Projectname' => "$projectname",
     'icon' => __TDS__ . "$icon",

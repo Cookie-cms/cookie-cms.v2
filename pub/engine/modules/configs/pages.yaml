@@ -1,20 +1,29 @@
 home:
   uri: home
-  maintenance: false
+  maintenance: true
   template: home
   variablesPath : home
   default: ""
+  category: false
 admin:
   uri: admin
   maintenance: false
   template: admin
   variablesPath : admin
-  suffix: 
-    enabled: true
   default: index
+  category: true
 index:
   uri: index
   maintenance: true
   template: index
   variablesPath : index
   default: "1"
+  category: false
+settings:
+  uri: settings
+  maintenance: false
+  template: settings
+  variablesPath : settings
+  default: "settings"
+  auto: false
+  category: false

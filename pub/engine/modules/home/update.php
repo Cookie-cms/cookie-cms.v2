@@ -170,7 +170,7 @@ if (isset($_FILES['new_skin']) && !empty($_FILES['new_skin']['name'])) {
 if (isset($_POST['setcloak'])) {
     $cloak = (int)$_POST['setcloak'];
     $user_id = $_POST['uuid'];
-    if ($cloak === 0) {
+    if ($cloak === 0) { // Use strict comparison and correct assignment operator
         try {
             $stmt = $conn->prepare('UPDATE `skins` SET `cape` = NULL WHERE `uuid` = :uuid');
             $stmt->bindValue(':uuid', $user_id);
@@ -179,7 +179,7 @@ if (isset($_POST['setcloak'])) {
                 'error' => false,
                 'msg' => "Cape removed successfully."
             );
-            echo (json_encode($responseData, JSON_PRETTY_PRINT));
+            echo json_encode($responseData, JSON_PRETTY_PRINT);
         } catch (Exception $e) {
             $responseData = array(
                 'error' => true,
@@ -187,22 +187,23 @@ if (isset($_POST['setcloak'])) {
             );
             die(json_encode($responseData, JSON_PRETTY_PRINT));
         }
-    }
-    try {
-        $stmt = $conn->prepare('UPDATE `skins` SET `cape` = :cid WHERE `uuid` = :uuid');
-        $stmt->bindValue(':uuid', $user_id);
-        $stmt->bindValue(':cid', $cloak);
-        $stmt->execute();;
-        $responseData = array(
-            'error' => false,
-            'msg' => "Cape set successfully."
-        );
-        echo json_encode($responseData, JSON_PRETTY_PRINT);
-    } catch (Exception $e) {
-        $responseData = array(
-            'error' => true,
-            'msg' => $e->getMessage()
-        );
-        die(json_encode($responseData, JSON_PRETTY_PRINT));
+    } else {
+        try {
+            $stmt = $conn->prepare('UPDATE `skins` SET `cape` = :cid WHERE `uuid` = :uuid');
+            $stmt->bindValue(':uuid', $user_id);
+            $stmt->bindValue(':cid', $cloak);
+            $stmt->execute(); // Remove unnecessary semicolon
+            $responseData = array(
+                'error' => false,
+                'msg' => "Cape set successfully."
+            );
+            echo json_encode($responseData, JSON_PRETTY_PRINT);
+        } catch (Exception $e) {
+            $responseData = array(
+                'error' => true,
+                'msg' => $e->getMessage()
+            );
+            die(json_encode($responseData, JSON_PRETTY_PRINT));
+        }
     }
 }

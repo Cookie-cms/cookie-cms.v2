@@ -1,8 +1,7 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', true);
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
-require __RDS__ . '/vendor/autoload.php';
+require __ven__;
 use Symfony\Component\Yaml\Yaml;
 
 function read_yaml($file_path) {

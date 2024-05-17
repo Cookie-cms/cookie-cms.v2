@@ -165,16 +165,25 @@ if (__URL__[2] == "cape") {
     // Fetch the result
     $cloakQueryResult = $stmt->fetch(PDO::FETCH_OBJ);
         // Continue with the rest of your code
-        $cloakName = $cloakQueryResult->cloak;
-        $CLOAK = $_SERVER['DOCUMENT_ROOT'] . "/uploads/capes/{$cloakName}.png";
-        
+	$cloakName = $cloakQueryResult->cloak;
+	if (empty($cloakName)) {
+		header('Content-Type: application/json');
 
-        // Set the content type to JSON
-        header ("Content-type: image/png");
-		$cloak = imagecreatefrompng($CLOAK);
-		imagealphablending($cloak, false);
-		imagesavealpha($cloak, true);
-		imagepng($cloak);
+		$responseData = array(
+			'error' => true,
+			'msg' => 'No cloak found for this user'
+		);
+		die(json_encode($responseData, JSON_PRETTY_PRINT));
+	}
+	$CLOAK = $_SERVER['DOCUMENT_ROOT'] . "/uploads/capes/{$cloakName}.png";
+	
+
+	// Set the content type to JSON
+	header ("Content-type: image/png");
+	$cloak = imagecreatefrompng($CLOAK);
+	imagealphablending($cloak, false);
+	imagesavealpha($cloak, true);
+	imagepng($cloak);
 
         // echo($cloakUrl);
 

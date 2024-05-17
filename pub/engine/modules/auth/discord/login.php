@@ -26,10 +26,10 @@ try {
     if ($user) {
         $_SESSION['id'] = $user['id'];
         // $_SESSION['uuid'] = $user['uuid'];
-        header("Location: /home");
+        header("Location: /settings");
         exit();
     } else {
-        header("Location: /registerds");
+        header("Location: /oauth2");
     }
 } catch(PDOException $e) {
     echo "Error: " . $e->getMessage();
