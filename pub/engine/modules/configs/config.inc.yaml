@@ -10,8 +10,8 @@ basic:
   domain: "cookiecms.coffeedev.dev"
   # version: company/club
   version: club
-  blocklocalhost: false
-  accountperip : 1
+  BlockLocalhost: true
+  AccountsPerIP : 1
   skindefault: 
     skin: ""
     slim: false 
@@ -22,7 +22,7 @@ logs:
 
 # maintenance section
 maintenance:
-  enabled: true
+  enabled: false
   comment: ""
   unixstemp: ""
 

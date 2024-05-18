@@ -36,7 +36,7 @@ if(isset($_COOKIE["show"])) {
     echo $cookieValue;
 }
 $locked = true;
-// echo $locked;
+// echo $locked;https://www.youtube.com/shorts/xgtkV1FkoSs?si=jXP52AgPa3vAmSBvhttps://www.youtube.com/shorts/xgtkV1FkoSs?si=jXP52AgPa3vAmSBv
 $variables = [
     'Projectname' => "$projectname",
     'icon' => __TDS__ . "$icon",
@@ -63,7 +63,7 @@ ob_start(); // Start output buffering
 
 foreach ($users as $item): ?>
         <a href="/home?user=<?= $item['uuid'] ?>" class="list-group-item list-group-item-action">
-            <img class="rounded" src="http://cookiecms.local/api/skin/extra/<?= $item['uuid'] ?>/?mode=3&size=50" alt="<?= $item['username'] ?>">
+            <img class="rounded" src="http://cookiecms.local/api/skins/extra/<?= $item['uuid'] ?>/?mode=3&size=50" alt="<?= $item['username'] ?>">
             <?= $item['username'] ?>
         </a>
 

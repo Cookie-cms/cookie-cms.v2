@@ -141,8 +141,8 @@
 
     skinViewer.width = 300;
     skinViewer.height = 600;
-    skinViewer.loadSkin("/api/skin/skin/{{ uuid }}/");
-    skinViewer.loadCape("/api/skin/cape/{{ uuid }}/");
+    skinViewer.loadSkin("/api/skins/skin/{{ uuid }}/");
+    skinViewer.loadCape("/api/skins/cape/{{ uuid }}/");
     skinViewer.fov = 70;
     skinViewer.zoom = 0.5;
     skinViewer.autoRotate = false;
@@ -167,7 +167,7 @@
         // Code to handle elytra selection
         console.log("Elytra selected");
         // Call the skinViewer.loadCape() function or any other relevant actions
-        skinViewer.loadCape("/api/skin/cape/{{ uuid }}/", { backEquipment: "elytra" });
+        skinViewer.loadCape("/api/skins/cape/{{ uuid }}/", { backEquipment: "elytra" });
     } else if (selectedValue === "cape") {
         // Code to handle none (cape) selection
         console.log("None (cape) selected");

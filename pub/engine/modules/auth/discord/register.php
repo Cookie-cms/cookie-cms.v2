@@ -12,11 +12,10 @@ $file_path = __CM__ . 'configs/config.inc.yaml';
 $yaml_data = read_yaml($file_path);
 
 $mail = $yaml_data['basic']['registerTypes']['basic'];
-
+$AccountsPerIP = $yaml_data['basic']['registerTypes']['AccountsPerIP'];
 $logschat = $yaml_data['logs']['accounts'];
 if (isset($_SESSION['user_data']['email'])) {
     $dsmail = $_SESSION['user_data']['email'];
-    // Additional code if needed
 } else {
     $dsmail = NULL;
 }
@@ -52,7 +51,7 @@ try {
     $stmt->bindParam(':ip', $ip);
     $stmt->execute();
 
-    if ($stmt->rowCount() > 0) {
+    if ($stmt->rowCount() > (int)$AccountsPerIP) {
         header('Content-Type: application/json');
         $responseData = array(
             'error' => true,
@@ -97,7 +96,7 @@ try {
     $stmt->bindParam(':mail', $dsmail);
     $stmt->bindParam(':ip', $ip);
     $stmt->execute();
-    if ($mail) {
+    if ($dsmail) {
         $email = $dsmail;
         $username = $_SESSION['user_data']['username'];
         // function send welcome email
@@ -105,8 +104,9 @@ try {
         $date = time();
         // welcomemsg($email, $id, $date, $username);
         $code = generatecode($id);
-        echo $code;
+        // echo $code;
         verificationmsg($email, $username, $code, $id);
+
     }   
     $webhookUrl = $yaml_data['logs']['accounts']['token'];
 

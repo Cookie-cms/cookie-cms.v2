@@ -1,12 +1,12 @@
 discord: 
   uri: discord
   dir: oauth2
-skin: 
-  uri: skin
-  dir: skinview
-gravitskins: 
-  uri: gravitskins
-  dir: gravitskins
+skins: 
+  uri: skins
+  dir: skins
 mail: 
   uri: mail
   dir: mail
+system:
+  uri: system
+  dir: system

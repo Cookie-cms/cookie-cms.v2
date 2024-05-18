@@ -27,3 +27,11 @@ settings:
   default: "settings"
   auto: false
   category: false
+auth:
+  uri: auth
+  maintenance: false
+  template: auth
+  variablesPath : auth
+  default: "login"
+  category: false
+  auto: false

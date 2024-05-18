@@ -7,11 +7,38 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 // $yamlFilePath = __CM__ . 'configs/config.inc.yml';
 require_once __CI__ . "yamlReader.php";
+require __CM__ . "auth/ip_module.php";
 
 $file_path = __CM__ . 'configs/config.inc.yaml';
 $yaml_data = read_yaml($file_path);
+$AccountsPerIP = $yaml_data['basic']['AccountsPerIP'];
+$BlockLocalhost = $yaml_data['basic']['BlockLocalhost'];
+$registrationstatus = $yaml_data['basic']['registration'];
+
+
+if ($registrationstatus === false) {
+    header('Content-Type: application/json');
+        $responseData = array(
+            'error' => true,
+            'msg' => "Registration is disabled."
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
+}
+
 
 $ip = $_SERVER['REMOTE_ADDR'];
+
+if ($BlockLocalhost){
+    $isLocal = isLocalIp($ip);
+    if ($isLocal) {
+        header('Content-Type: application/json');
+        $responseData = array(
+            'error' => true,
+            'msg' => "The IP address {$userIpAddress} is in the local range (192.168.0.0 to 192.168.225.255)."
+        );
+        die(json_encode($responseData, JSON_PRETTY_PRINT));
+    }
+}
 
 
 require __CM__ . "inc/mysql.php";
@@ -42,7 +69,7 @@ try {
             exit();
         }
 
-        $id = mt_rand(100000000000000000, 999999999999999999);
+        $id = mt_rand(000000000000000000, 999999999999999999);
 
 
         $hashed_password = password_hash($pass, PASSWORD_BCRYPT);

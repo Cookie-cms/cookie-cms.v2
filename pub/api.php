@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', true);// Функции с плащами пока вырезаны
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 require_once __CD__. "modules/api/verifytoken_profile.php";
@@ -14,7 +17,7 @@ $requestedModule = __URL__[1];
 if (isset($yaml_data[$requestedModule])) {
     $uriParameters = http_build_query($_GET);
     $data = $yaml_data[$requestedModule];
-    $moduleFilePath = __CD__ . "modules/api/{$data['dir']}.php";
+    $moduleFilePath = __CD__ . "modules/api/{$data['dir']}/main.php";
 
     if (file_exists($moduleFilePath)) {
         include $moduleFilePath;
