@@ -10,3 +10,6 @@ mail:
 system:
   uri: system
   dir: system
+discordacc: 
+  uri: discordacc
+  dir: discordacc

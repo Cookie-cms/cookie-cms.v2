@@ -18,8 +18,9 @@ define('__JS__', __TD__ . 'js/');
 define('__AS__', __TD__ . 'assets/');
 define('__INT__', __TD__ . 'inc/');
 define('__ven__', __RDS__ . '/../vendor/autoload.php');
-
+define('__hub__', __RDS__ . '/../');
 require_once __CI__ . "TemplateEngine.php";
 require_once __CI__ . "yamlReader.php";
 // require_once __CI__ . "mail.php";
 include  __CD__ . "pages/global.php";
+require_once 'error.php';

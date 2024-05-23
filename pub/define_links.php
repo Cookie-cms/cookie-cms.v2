@@ -1,4 +1,5 @@
 <?php
+
 $file_path = __CM__ . 'inc/discordlink.php';
 
 $links = [

@@ -33,5 +33,4 @@ auth:
   template: auth
   variablesPath : auth
   default: "login"
-  category: false
-  auto: false
+  category: true

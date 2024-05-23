@@ -73,18 +73,16 @@ if (__URL__[2] == "minecraft") {
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':owner', $result[0]['owner']);
         $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        foreach ($result as $key => $value) {
-            $result[$key]['discord'] = $value['dsid'];
-            unset($result[$key]['dsid']);
-        }
+        // var_dump($result);
+
         header('Content-Type: application/json');
+        $responseData = array(
+            'discord' => $result["dsid"],
+        );
 
-        // Use the dsid as needed
-        $response = json_encode($result);
-    echo $response;
-
+        echo json_encode($responseData, JSON_PRETTY_PRINT);
 
         
     } else {

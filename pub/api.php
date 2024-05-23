@@ -27,6 +27,12 @@ if (isset($yaml_data[$requestedModule])) {
     }
 } else {
     http_response_code(404);
-    die("Module not found");
+    header('Content-Type: application/json');
+    $responseData = array(
+        'error' => true,
+        'msg' => 'Api request not found'
+    );
+    die(json_encode($responseData, JSON_PRETTY_PRINT));
+
 }
 ?>
