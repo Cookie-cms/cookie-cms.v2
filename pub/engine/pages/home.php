@@ -85,6 +85,8 @@ $variables = [
     'skinjs' => __TDS__ . "js/skinview3d.bundle.js",
     'uuid' => "$uuid",
     'username' => "$playername",
+    'session' => $session,
+    'profiles' => $profiles 
     // 'logged' => "$logged",
     
 ];
@@ -137,7 +139,7 @@ ob_start(); // Start output buffering
     <input type="hidden" name="uuid" id="uuid" value="<?php echo $uuid?>">
 
 <?php foreach ($capes as $cape): ?>
-    <img src="api/skin/cloakview/<?php echo $cape['cloak']; ?>/2/128">
+    <img src="api/skins/cloakview/<?php echo $cape['cloak']; ?>/2/128">
     <button type="submit" class="btn btn-primary" name="setcloak" value="<?=$cape['id']?>" <?=$cape['id']==$c->cape?'disabled':''?>>set</button>
 <?php endforeach; ?>
 

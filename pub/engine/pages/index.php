@@ -4,6 +4,7 @@ ini_set('display_errors', true);
 require_once __DEF__;
 $avatarUrl = "";
 require __CD__ . 'pages/global.php';
+require __CM__ . "inc/mysql.php";
 
 
 
@@ -40,8 +41,11 @@ $variables = [
     't' => "$requestUri",
     'logged' => "$loggeds",
     'snow' => $snow,
+    'session' => $session,
 ];
 // $snow = "true";
 // $variables['snow'] = $snow;
 
+// $username = $_COOKIE['show'];
+    // echo $username;
 ?>

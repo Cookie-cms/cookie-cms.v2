@@ -1,63 +1,40 @@
-
-<nav class="navbar navbar-expand-lg navbar-nav-scroll">
-        
-    <div class="container px-5">
-        <a class="navbar-brand" href="/">&nbsp;{{ Projectname }}</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+<nav class="navbar navbar-expand-lg navbar-dark" style="margin-left: 100px; margin-right: 100px;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">{{ Projectname }}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {{ if session}}
                 <li class="nav-item dropdown">
-    </li>
-    {{ if snow }}
-        <script src="http://cookiecms.local/template/js/snow.js"></script>
-        <link rel="stylesheet" href="http://cookiecms.local/template/css/snow.css">
-    {{ endif }}
-
-    <!-- {{ if loggedds }}
-        {{ if avatarUrlds }}
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://cdn.discordapp.com/avatars/741957448532754493/3905f10efdf7de4b3c76fed401c56270.webp?size=80" width="32" height="32" class="rounded-circle">
-                <!-- User 
-            </a>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                <li><hr class="dropdown-divider"></li>
-            </ul>
-        </li>
-        {{ else }}
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                <img src="https://cdn.discordapp.com/avatars/741957448532754493/3905f10efdf7de4b3c76fed401c56270.webp?size=80" width="32" height="32" class="rounded-circle">
-                <!-- User 
-
-            </a>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Actiona</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                <li><hr class="dropdown-divider"></li>
-                
-            </ul>
-        </li>
-        {{ endif }} -->
-        
-    <!-- {{ else }} -->
-    <!-- {{ endif }} -->
-
-
-
-
-            
-
-
-
-        </div>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Settings
+                    </a>
+                    <ul class="dropdown-menu">
+                      {{ profiles }}
+                    </ul>
+                  </li>
+                {{ endif }}
+                {{ if session}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Settings
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/settings">Settings</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                  </li>
+                {{ endif }}
+                {{ if snow }}
+                <li class="nav-item">
+                    <link rel="stylesheet" href="http://cookiecms.local/template/css/snow.css">
+                    <script src="http://cookiecms.local/template/js/snow.js"></script>
+                </li>
+                {{ endif }}
             </ul>
         </div>
     </div>
-</nav> 
-<!-- < -->
-<!--  -->
+</nav>

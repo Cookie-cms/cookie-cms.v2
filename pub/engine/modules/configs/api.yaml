@@ -13,3 +13,6 @@ system:
 discordacc: 
   uri: discordacc
   dir: discordacc
+gml: 
+  uri: gml
+  dir: gml

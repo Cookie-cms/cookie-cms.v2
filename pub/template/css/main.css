@@ -1,10 +1,10 @@
 @font-face {
-    font-family:Julius Sans One;
-    src: url(/template/assets/JuliusSansOne.ttf);
+    font-family:Montserrat;
+    src: url(/template/assets/Montserrat-Regular.ttf);
 }
 body {
     color: #FFF;
-    font-family: "Julius Sans One";
+    font-family: "Montserrat";
     /* font-size: 45px; */
     height: 2000px;
     font-style: normal;

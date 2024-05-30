@@ -50,13 +50,8 @@ if (isset($_POST['new_username']) && !empty($_POST['new_username'])) {
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
-            header('Content-Type: application/json');
-
-            $responseData = array(
-                'error' => true,
-                'msg' => 'Username already exists.'
-            );
-            die(json_encode($responseData, JSON_PRETTY_PRINT));
+            
+            die(msgdisplay(true, "Username already exists."));
         } else {
             $stmt = $conn->prepare("UPDATE users_profiles SET username = :username WHERE uuid = :uuid");
             $stmt->bindValue(':username', $new_username);

@@ -45,7 +45,7 @@ smtp:
 
 # debug section
 debug:
-  debug: true
+  debug: false
   development: false
   generatorusername: false
   outLogMasterFasterErrorOutPut: false

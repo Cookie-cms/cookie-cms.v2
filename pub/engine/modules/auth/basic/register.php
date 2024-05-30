@@ -4,7 +4,6 @@ ini_set('display_errors', true);
 session_start();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 // $yamlFilePath = __CM__ . 'configs/config.inc.yml';
 require_once __CI__ . "yamlReader.php";
 require __CM__ . "auth/ip_module.php";
