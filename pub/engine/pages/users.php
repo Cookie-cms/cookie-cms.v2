@@ -1,18 +1,18 @@
 <?php
-# This file is part of CookieCms.
+# This file is part of CookieCMS Open.
 #
-# CookieCms is free software: you can redistribute it and/or modify
+# CookieCMS Open is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# CookieCms is distributed in the hope that it will be useful,
+# CookieCMS Open is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with CookieCms. If not, see <http://www.gnu.org/licenses/>.
+# along with CookieCMS Open. If not, see <http://www.gnu.org/licenses/>.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/define.php";
 
 require __CM__ . "inc/mysql.php";
@@ -45,7 +45,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 foreach ($users as $item): ?>
         <tr>
             <td><?=$item['id']?></td>
-            <td><a href="/users/<?=$item['uuid']?>/"><img src="http://cookiecms.local/api/skinview/extra/<?=$item['uuid']?>/?mode=3&size=50" class="avatar rounded" alt="Avatar"> <?=$item['username']?></a></td>
+            <td><a href="/users/<?=$item['uuid']?>/"><img src="http://CookieCMS Open.local/api/skinview/extra/<?=$item['uuid']?>/?mode=3&size=50" class="avatar rounded" alt="Avatar"> <?=$item['username']?></a></td>
             <td>12/08/2017</td>                        
             <!-- <td><span class="status text-warning">&bull;</span> Inactive</td> -->
             <!-- <td>

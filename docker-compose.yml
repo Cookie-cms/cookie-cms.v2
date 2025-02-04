@@ -3,7 +3,7 @@
 ###############################################################################
 version: '3.1'
 services:
-    container_name: cookiecms
+    container_name: CookieCMS Open
     mysql:
         image: 'mysql:8.0'
         working_dir: /application
@@ -11,7 +11,7 @@ services:
             - '.:/application'
         environment:
             - MYSQL_ROOT_PASSWORD=admin
-            - MYSQL_DATABASE=cookiecms
+            - MYSQL_DATABASE=CookieCMS Open
             - MYSQL_USER=admin
             - MYSQL_PASSWORD=admin
         ports:

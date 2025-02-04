@@ -4,7 +4,7 @@
 [Api skins gravit launcher](https://gravitlauncher.com/other/#%D0%BC%D0%B5%D1%82%D0%BE%D0%B4-json)<br>
 [template engine](https://github.com/Cookie-cms/engine/tree/main/TemplateEngine)<br>
 
-[wiki](https://wiki-cookiecms.coffeedev.dev/)
+[wiki](https://wiki-CookieCMS Open.coffeedev.dev/)
 
 how setup via docker
 ```sh
